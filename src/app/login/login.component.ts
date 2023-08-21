@@ -32,7 +32,6 @@ export class LoginComponent implements OnInit {
   }
 
   login(username: string, password: string): void {
-    if (this.authService.login(username, password)) {
       // Обработка успешного входа
       if (this.authService.login(username, password)) {
         this.router.navigate(['board']);
@@ -40,8 +39,7 @@ export class LoginComponent implements OnInit {
       // Обработка ошибки входа
     }
   }
-}
-
+  
   onSubmit() {
     if (this.logInSection.valid) {
       // Handle form submission
