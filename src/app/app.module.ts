@@ -13,6 +13,8 @@ import { AboutTeamComponent } from './about-team/about-team.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthDirective } from './auth.directive';
+import { BoardComponent } from './board/board.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AboutTeamComponent,
     LoginComponent,
     SignUpComponent,
+    AuthDirective,
+    BoardComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +40,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       {path: 'team', component: AboutTeamComponent},
       {path: 'login', component: LoginComponent},
       {path: 'signup', component: SignUpComponent},
+      {path: 'board', component: BoardComponent},
 
     ]),
     BrowserAnimationsModule,
