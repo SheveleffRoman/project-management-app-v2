@@ -15,6 +15,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthDirective } from './auth.directive';
 import { BoardComponent } from './board/board.component';
+import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 
 @NgModule({
   declarations: [
@@ -28,16 +29,18 @@ import { BoardComponent } from './board/board.component';
     SignUpComponent,
     AuthDirective,
     BoardComponent,
+    WelcomePageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
-      {path: '', redirectTo: '/product', pathMatch: 'full'},
-      {path: 'product', component: AboutProductComponent},
-      {path: 'tech', component: AboutTechComponent},
-      {path: 'team', component: AboutTeamComponent},
+      {path: '', redirectTo: '/welcome/product', pathMatch: 'full'},
+      {path: 'welcome', redirectTo: '/welcome/product', pathMatch: 'full'},
+      {path: 'welcome/product', component: AboutProductComponent},
+      {path: 'welcome/tech', component: AboutTechComponent},
+      {path: 'welcome/team', component: AboutTeamComponent},
       {path: 'login', component: LoginComponent},
       {path: 'signup', component: SignUpComponent},
       {path: 'board', component: BoardComponent},
