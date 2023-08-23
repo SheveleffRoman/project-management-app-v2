@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FakeAuthService } from '../fake-auth.service';
 
 @Component({
   selector: 'app-board',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent {
+
+  constructor(private authService: FakeAuthService) {}
+
+  logout() {
+    this.authService.logout();
+  }
 
 }
