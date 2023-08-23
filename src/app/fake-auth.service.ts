@@ -29,7 +29,7 @@ export class FakeAuthService {
 
   login(username: string, password: string): boolean {
     // Здесь вы можете сравнивать данные с какими-то предопределенными значениями
-    if (username === 'roman' && password === 'Romanik16') {
+    if (username === 'roman' && password === 'Romanik16)') {
       this.isAuthenticated = true;
       localStorage.setItem('isAuth', 'true');
       return true;
