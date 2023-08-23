@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule, Routes } from '@angular/router';
@@ -16,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthDirective } from './auth.directive';
 import { BoardComponent } from './board/board.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { WarningDialogComponent } from './warning-dialog/warning-dialog.component';
 
 const routes: Routes = [
   {
@@ -47,6 +49,7 @@ const routes: Routes = [
     AuthDirective,
     BoardComponent,
     WelcomePageComponent,
+    WarningDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent],

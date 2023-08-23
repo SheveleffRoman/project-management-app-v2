@@ -1,0 +1,14 @@
+<!-- warning-dialog.component.html -->
+<div class="warning-dialog">
+    <h2 class="warning-title">{{ data.title }}</h2>
+    <p class="warning-message">{{ data.message }}</p>
+    <button
+      mat-raised-button
+      color="primary"
+      class="warning-button"
+      (click)="closeDialog()"
+    >
+      Закрыть
+    </button>
+  </div>
+  
