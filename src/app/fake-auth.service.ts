@@ -13,6 +13,8 @@ import {
 export class FakeAuthService {
   private isAuthenticated = false;
 
+  private loggedInUser: string | null = null;
+
   constructor(private router: Router, public dialog: MatDialog) {}
 
   showErrorDialog(title: string, message: string) {
@@ -46,6 +48,7 @@ export class FakeAuthService {
   logout(): void {
     this.isAuthenticated = false;
     localStorage.setItem('isAuth', 'false');
+    localStorage.removeItem('loggedInUser');
     setTimeout(() => {
       this.router.navigate(['']);
     }, 1500);
@@ -69,5 +72,13 @@ export class FakeAuthService {
       return ['/board'];
     }
     return ['/welcome/login'];
+  }
+
+  setLoggedInUser(username: string): void {
+    this.loggedInUser = username;
+  }
+
+  getLoggedInUser(): string | null {
+    return this.loggedInUser;
   }
 }

@@ -34,6 +34,8 @@ export class LoginComponent implements OnInit {
   login(username: string, password: string): void {
       // Обработка успешного входа
       if (this.authService.login(username, password)) {
+        this.authService.setLoggedInUser(username); // Сохранение имени пользователя
+        localStorage.setItem('loggedInUser', JSON.stringify(username));
         this.router.navigate(['board']);
     } else {
       // Обработка ошибки входа
