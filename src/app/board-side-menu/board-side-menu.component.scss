@@ -1,0 +1,112 @@
+.wrapper_side_menu {
+    width: 15.66rem;
+    height: 100vh;
+    background: #ececec;
+    position: absolute;
+    border-top-left-radius: 1.875rem;
+    border-bottom-left-radius: 1.875rem;
+    border-right: 1px solid black;
+    // box-shadow: 0px 44px 84px 6px #D8D9DB;
+}
+
+h1.title {
+    color: #0D062D;
+    font-family: Inter;
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.title_wrapper {
+    display: inline-flex;
+    flex-direction: row;
+    margin-top: 2rem;
+    margin-left: 1.38rem;
+    gap: 2.88rem;
+    align-items: baseline;
+}
+
+.title_block {
+    height: 5.5rem;
+    border-bottom: 1px solid #0D062D;
+    border-top-left-radius: 1.875rem;
+    // box-shadow: 0px 44px 84px 6px #D8D9DB;
+}
+
+.main_menu_block {
+    margin-left: 1.37rem;
+    margin-top: 2.06rem;
+    margin-bottom: 2.09rem;
+}
+
+.main_menu_block li:not(:last-child) {
+    margin-bottom: 1.88rem;
+}
+
+.projects_block {
+    width: 14.1rem;
+    margin-left: 0.81rem;
+    padding-top: 1.91rem;
+    border-top: 1px solid #DBDBDB;
+
+    h2 {
+        color: #787486;
+        font-family: Inter;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+
+    .projects_block_title {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6.25rem;
+        margin-left: 0.5rem;
+        margin-bottom: 1.31rem;
+    }
+
+    .project_lists {
+        // margin-left: 0.75rem;
+    }
+
+    .project_lists li {
+        padding: 0.63rem;
+    }
+
+    .project_lists li:not(:last-child) {
+        margin-bottom: 0.65rem;
+    }
+
+    .project_lists li p {
+        color: #787486;
+        font-family: Inter;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+
+    .project_lists li.target {
+        border-radius: 0.375rem;
+        background: rgba(80, 48, 229, 0.08);
+    }
+
+    // .project_lists li.target {
+    //     display: inline-flex;
+    //     gap: 4.44rem;
+    //     align-items: baseline;
+    //     width: 14.0625rem;
+    //     height: 2.4375rem;
+    //     border-radius: 0.375rem;
+    //     background: rgba(80, 48, 229, 0.08);
+    //     padding: 0.45rem 0 0.63rem 2.25rem;
+
+    //     span {
+    //         display: flex;
+    //         align-self: flex-end;
+    //     }
+    // }
+}
