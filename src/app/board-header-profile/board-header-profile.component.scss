@@ -1,0 +1,41 @@
+.profile_block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.meta_profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    h3 {
+        color: #0D062D;
+        text-align: right;
+        font-family: Inter;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    p {
+        color: #787486;
+        text-align: right;
+        font-family: Inter;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+}
+
+.profile_photo {
+    width: 2.375rem;
+    height: 2.375rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+}

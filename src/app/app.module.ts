@@ -23,6 +23,8 @@ import { BoardMainContentComponent } from './board-main-content/board-main-conte
 import { BoardColumnComponent } from './board-column/board-column.component';
 import { BoardTaskComponent } from './board-task/board-task.component';
 import { BoardSideMenuComponent } from './board-side-menu/board-side-menu.component';
+import { BoardHeaderSearchComponent } from './board-header-search/board-header-search.component';
+import { BoardHeaderProfileComponent } from './board-header-profile/board-header-profile.component';
 
 const routes: Routes = [
   {
@@ -60,6 +62,8 @@ const routes: Routes = [
     BoardColumnComponent,
     BoardTaskComponent,
     BoardSideMenuComponent,
+    BoardHeaderSearchComponent,
+    BoardHeaderProfileComponent,
   ],
   imports: [
     BrowserModule,
