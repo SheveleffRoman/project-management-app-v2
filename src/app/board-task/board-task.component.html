@@ -1,1 +1,38 @@
-<p>board-task works!</p>
+<!-- <div cdkDropListGroup>
+    <div class="example-container">
+      <h2>To do</h2>
+  
+      <div
+        cdkDropList
+        [cdkDropListData]="todo"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+      </div>
+    </div>
+  
+    <div class="example-container">
+      <h2>Done</h2>
+  
+      <div
+        cdkDropList
+        [cdkDropListData]="done"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of done" cdkDrag>{{item}}</div>
+      </div>
+    </div>
+  </div>
+   -->
+<div class="task_block">
+    <div class="task_options">
+        <select name="priority" id="priority" [(ngModel)]="selectedPriority"
+            [ngClass]="{'low': selectedPriority === 'low', 'high': selectedPriority === 'high'}">
+            <option value="low">Low</option>
+            <option value="high">High</option>
+        </select>
+        <span>...</span>
+    </div>
+    <h1>Brainstorming</h1>
+    <p>Brainstorming brings team members' diverse experience into play.</p>
+</div>
