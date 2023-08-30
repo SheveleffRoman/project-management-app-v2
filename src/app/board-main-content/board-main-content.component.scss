@@ -1,12 +1,13 @@
 .main_wrapper {
     margin-left: 15.66rem;
-    // height: calc(100vh - 5.5rem);
+    height: calc(100vh - 5.5rem);
     max-width: 100%;
     background-color: white;
     border-bottom-right-radius: 1.875rem;
     padding-left: 3.03rem;
     overflow: auto;
     scroll-behavior: smooth;
+    padding-top: 2.56rem;
 }
 
 .board_name_block {
@@ -14,7 +15,6 @@
     flex-direction: row;
     align-items: center;
     // margin-left: 3.03rem;
-    margin-top: 2.56rem;
     margin-bottom: 2.19rem;
 
     span {
