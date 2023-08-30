@@ -5,6 +5,8 @@
     background-color: white;
     border-bottom-right-radius: 1.875rem;
     padding-left: 3.03rem;
+    overflow: auto;
+    scroll-behavior: smooth;
 }
 
 .board_name_block {
