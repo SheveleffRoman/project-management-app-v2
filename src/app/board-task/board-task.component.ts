@@ -1,5 +1,6 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Task } from '../board-column/board-column.component';
+
 
 
 @Component({
@@ -8,24 +9,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./board-task.component.scss'],
 })
 export class BoardTaskComponent {
-  
+
   selectedPriority: string = 'low';
 
-  
-  todo = ['Get to work'];
-
-  done = ['Get up', 'Brush teeth'];
-
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-    }
-  }
+  @Input() task!: Task;
 }
