@@ -1,4 +1,4 @@
-<div class="task_block">
+<div class="task_block" *ngIf="task">
     <div class="task_options">
         <select name="priority" id="priority" [(ngModel)]="selectedPriority"
             [ngClass]="{'low': selectedPriority === 'low', 'high': selectedPriority === 'high'}">

@@ -12,5 +12,6 @@ export class BoardTaskComponent {
 
   selectedPriority: string = 'low';
 
-  @Input() task!: Task;
+  @Input() task: Task | undefined;
+  
 }
