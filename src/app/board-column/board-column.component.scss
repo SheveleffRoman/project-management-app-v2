@@ -63,8 +63,37 @@
 
 .cdk-drag-placeholder {
     opacity: 0;
-  }
+}
 
-  .tasks.cdk-drop-list-dragging .task-box:not(.cdk-drag-placeholder) {
+.tasks.cdk-drop-list-dragging .task-box:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
+}
+
+.center-form {
+    position:fixed;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    top:0px;
+    width: 100vw;
+    height: 100vh;
+    left:0px;
+    }
+
+.input_task_form {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.input_name {
+    font-size: 1rem;
+}
+
+.input_task_btn {
+    margin-top: 20px;
+    margin-right: 10px;
+}

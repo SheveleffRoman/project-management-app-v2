@@ -13,5 +13,6 @@ export class BoardTaskComponent {
   selectedPriority: string = 'low';
 
   @Input() task: Task | undefined;
+  @Input() index!: number;
   
 }
