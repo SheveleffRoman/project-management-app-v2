@@ -49,3 +49,44 @@ export class TaskService {
     }
   }
 }
+
+
+// const boardsAndTasks = [
+//   {
+//     boardName: "Доска 1",
+//     tasks: [
+//       {
+//         taskId: 1,
+//         taskName: "Задача 1",
+//         taskDescription: "Описание задачи 1",
+//       },
+//       {
+//         taskId: 2,
+//         taskName: "Задача 2",
+//         taskDescription: "Описание задачи 2",
+//       },
+//     ],
+//   },
+//   {
+//     boardName: "Доска 2",
+//     tasks: [
+//       {
+//         taskId: 3,
+//         taskName: "Задача 3",
+//         taskDescription: "Описание задачи 3",
+//       },
+//       {
+//         taskId: 4,
+//         taskName: "Задача 4",
+//         taskDescription: "Описание задачи 4",
+//       },
+//     ],
+//   },
+// ];
+
+
+// updateBoardName(boardIndex: number, newName: string) {
+//   if (boardIndex >= 0 && boardIndex < this.boardsAndTasks.length) {
+//     this.boardsAndTasks[boardIndex].boardName = newName;
+//   }
+// }
