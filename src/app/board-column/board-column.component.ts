@@ -44,7 +44,7 @@ export class BoardColumnComponent implements OnInit {
   addNewTask() {
     if (this.newTaskName && this.newTaskDescription) {
       this.taskService.addTask({
-        id: this.tasks.length + 1,
+        id: this.generateNewId(),
         name: this.newTaskName,
         description: this.newTaskDescription,
       });
@@ -58,6 +58,12 @@ export class BoardColumnComponent implements OnInit {
       this.newTaskName = '';
       this.newTaskDescription = '';
     }
+  }
+
+  private generateNewId(): number {
+    // Генерирует новый уникальный ID
+    // Например, можно использовать временную метку
+    return Date.now();
   }
 
   // deleteTask(index: number) {
