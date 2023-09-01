@@ -1,46 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
-
-export interface Task {
-  id: number;
-  name: string;
-  description: string;
-}
+import { Task, TaskService } from '../task.service';
 
 @Component({
   selector: 'app-board-column',
   templateUrl: './board-column.component.html',
   styleUrls: ['./board-column.component.scss'],
 })
-export class BoardColumnComponent {
+export class BoardColumnComponent implements OnInit {
   newTaskName: string = '';
   newTaskDescription: string = '';
   showForm: boolean = false;
 
-  todo: Task[] = [
-    {
-      id: 1,
-      name: 'Brainstorming',
-      description:
-        'Brainstorming brings team members diverse experience into play.',
-    },
-    {
-      id: 2,
-      name: 'Research',
-      description:
-        'User research helps you to create an optimal product for users.',
-    },
-    {
-      id: 3,
-      name: 'Wireframes',
-      description:
-        'Low fidelity wireframes include the most basic content and visuals.',
-    },
-  ];
+  tasks!: Task[];
+
+  constructor(private taskService: TaskService) {}
+
+  ngOnInit(): void {
+    this.getTasks();
+  }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.todo, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
   }
 
   showAddForm() {
@@ -55,13 +37,19 @@ export class BoardColumnComponent {
     this.newTaskDescription = '';
   }
 
+  getTasks() {
+    this.tasks = this.taskService.getTasks();
+  }
+
   addNewTask() {
     if (this.newTaskName && this.newTaskDescription) {
-      this.todo.push({
-        id: this.todo.length+1,
+      this.taskService.addTask({
+        id: this.tasks.length + 1,
         name: this.newTaskName,
         description: this.newTaskDescription,
       });
+
+      this.getTasks();
 
       // Скрыть форму после добавления
       this.showForm = false;
@@ -71,4 +59,10 @@ export class BoardColumnComponent {
       this.newTaskDescription = '';
     }
   }
+
+  // deleteTask(index: number) {
+  //   if (index >= 0 && index < this.todo.length) {
+  //     this.todo.splice(index, 1);
+  //   }
+  // }
 }

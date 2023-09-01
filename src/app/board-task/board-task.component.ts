@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Task } from '../board-column/board-column.component';
+import { Task } from '../task.service';
 
 
 
@@ -12,7 +12,7 @@ export class BoardTaskComponent {
 
   selectedPriority: string = 'low';
 
-  @Input() task: Task | undefined;
+  @Input() task!: Task;
   @Input() index!: number;
   
 }
