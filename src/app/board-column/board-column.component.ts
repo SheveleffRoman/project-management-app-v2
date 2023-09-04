@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { Task, TaskService } from '../task.service';
@@ -8,21 +8,24 @@ import { Task, TaskService } from '../task.service';
   templateUrl: './board-column.component.html',
   styleUrls: ['./board-column.component.scss'],
 })
-export class BoardColumnComponent implements OnInit {
+export class BoardColumnComponent {
   newTaskName: string = '';
   newTaskDescription: string = '';
   showForm: boolean = false;
+
+  @Input() board!: Task;
+  @Input() boardName = '';
 
   tasks!: Task[];
 
   constructor(private taskService: TaskService) {}
 
-  ngOnInit(): void {
-    this.getTasks();
-  }
+  // ngOnInit(): void {
+  //   this.getTasks();
+  // }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.board.tasks, event.previousIndex, event.currentIndex);
   }
 
   showAddForm() {
@@ -37,19 +40,13 @@ export class BoardColumnComponent implements OnInit {
     this.newTaskDescription = '';
   }
 
-  getTasks() {
-    this.tasks = this.taskService.getTasks();
-  }
-
   addNewTask() {
     if (this.newTaskName && this.newTaskDescription) {
-      this.taskService.addTask({
+      this.taskService.addTask(this.boardName, {
         id: this.generateNewId(),
         name: this.newTaskName,
         description: this.newTaskDescription,
       });
-
-      this.getTasks();
 
       // Скрыть форму после добавления
       this.showForm = false;
@@ -65,10 +62,4 @@ export class BoardColumnComponent implements OnInit {
     // Например, можно использовать временную метку
     return Date.now();
   }
-
-  // deleteTask(index: number) {
-  //   if (index >= 0 && index < this.todo.length) {
-  //     this.todo.splice(index, 1);
-  //   }
-  // }
 }

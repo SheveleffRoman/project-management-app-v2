@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 
 export interface Task {
-  id: number;
-  name: string;
+  boardName: string;
+  tasks: { id: number; name: string; description: string }[];
+}
+
+export interface TaskObj {
+  id: number; 
+  name: string; 
   description: string;
 }
 
@@ -10,80 +15,92 @@ export interface Task {
   providedIn: 'root',
 })
 export class TaskService {
-  
-  tasks: Task[] = [
+  boards: Task[] = [
     {
-      id: 1,
-      name: 'Brainstorming',
-      description:
-        'Brainstorming brings team members diverse experience into play.',
+      boardName: 'To Do',
+      tasks: [
+        {
+          id: 1,
+          name: 'Brainstorming',
+          description:
+            'Brainstorming brings team members diverse experience into play.',
+        },
+        {
+          id: 2,
+          name: 'Research',
+          description:
+            'User research helps you to create an optimal product for users.',
+        },
+        {
+          id: 3,
+          name: 'Wireframes',
+          description:
+            'Low fidelity wireframes include the most basic content and visuals.',
+        },
+      ],
     },
     {
-      id: 2,
-      name: 'Research',
-      description:
-        'User research helps you to create an optimal product for users.',
-    },
-    {
-      id: 3,
-      name: 'Wireframes',
-      description:
-        'Low fidelity wireframes include the most basic content and visuals.',
+      boardName: 'Done',
+      tasks: [
+        {
+          id: 1,
+          name: 'Columns',
+          description:
+            'Brainstorming brings team members diverse experience into play.',
+        },
+        {
+          id: 2,
+          name: 'Tasks',
+          description:
+            'User research helps you to create an optimal product for users.',
+        },
+      ],
     },
   ];
 
   constructor() {}
 
-  getTasks(): Task[] {
-    return this.tasks;
+  getBoards(): Task[] {
+    return this.boards;
   }
 
-  addTask(task: Task) {
-    this.tasks.push(task);
+  getTasksByBoard(boardName: string): Task[] {
+    return this.boards.filter((task) => task.boardName === boardName);
   }
+  
 
-  deleteTask(id: number) {
-    const index = this.tasks.findIndex((task) => task.id === id);
-    if (index !== -1) {
-      this.tasks.splice(index, 1);
+  addTask(boardName: string, task: TaskObj) {
+    const board = this.boards.find((board) => board.boardName === boardName);
+
+    if (board) {
+      // Генерируем уникальный ID для новой задачи (находим максимальный ID и добавляем 1)
+      const newId = Math.max(...board.tasks.map((t) => t.id), 0) + 1;
+
+      // Создаем новую задачу с указанными данными
+      const newTask = {
+        id: newId,
+        name: task.name,
+        description: task.description,
+      };
+
+      // Добавляем новую задачу в массив задач доски
+      board.tasks.push(newTask);
     }
   }
+
+  deleteTask(boardName: string, id: number) {
+    const board = this.boards.find((task) => task.boardName === boardName);
+  
+    if (board) {
+      const taskIndex = board.tasks.findIndex((task) => task.id === id);
+  
+      if (taskIndex !== -1) {
+        board.tasks.splice(taskIndex, 1);
+      }
+    }
+  }
+  
 }
-
-
-// const boardsAndTasks = [
-//   {
-//     boardName: "Доска 1",
-//     tasks: [
-//       {
-//         taskId: 1,
-//         taskName: "Задача 1",
-//         taskDescription: "Описание задачи 1",
-//       },
-//       {
-//         taskId: 2,
-//         taskName: "Задача 2",
-//         taskDescription: "Описание задачи 2",
-//       },
-//     ],
-//   },
-//   {
-//     boardName: "Доска 2",
-//     tasks: [
-//       {
-//         taskId: 3,
-//         taskName: "Задача 3",
-//         taskDescription: "Описание задачи 3",
-//       },
-//       {
-//         taskId: 4,
-//         taskName: "Задача 4",
-//         taskDescription: "Описание задачи 4",
-//       },
-//     ],
-//   },
-// ];
-
 
 // updateBoardName(boardIndex: number, newName: string) {
 //   if (boardIndex >= 0 && boardIndex < this.boardsAndTasks.length) {

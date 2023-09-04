@@ -1,7 +1,7 @@
 <div class="column_block">
     <div class="column_header">
-        <p>To Do</p>
-        <span>{{tasks.length}}</span>
+        <p>{{board.boardName}}</p>
+        <span>{{board.tasks.length}}</span>
         <svg (click)="showAddForm()" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
             fill="none">
             <path opacity="0.2"
@@ -24,7 +24,7 @@
         </svg>
     </div>
     <div class="tasks" cdkDropList (cdkDropListDropped)="drop($event)">
-        <app-board-task class="task-box" *ngFor="let task of tasks; let i = index" [task]="task" [index]="i"
+        <app-board-task class="task-box" *ngFor="let tasks of board.tasks" [task]="tasks" [boardName]="boardName"
             cdkDrag></app-board-task>
     </div>
 </div>
