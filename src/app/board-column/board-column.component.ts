@@ -24,10 +24,6 @@ export class BoardColumnComponent {
   //   this.getTasks();
   // }
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.board.tasks, event.previousIndex, event.currentIndex);
-  }
-
   showAddForm() {
     this.showForm = true;
     this.newTaskName = ''; // Сброс полей ввода

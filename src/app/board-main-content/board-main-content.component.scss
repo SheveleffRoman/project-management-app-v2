@@ -62,3 +62,15 @@
     flex-wrap: wrap;
     gap: 2rem;
 }
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.boards_wrapper.cdk-drop-list-dragging .task-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

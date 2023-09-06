@@ -70,7 +70,7 @@
       </span>
     </div>
   </div>
-  <div class="boards_wrapper">
-    <app-board-column *ngFor="let board of boards" [board]="board" [boardName]='board.boardName'></app-board-column>
+  <div class="boards_wrapper" cdkDropList cdkDropListGroup (cdkDropListDropped)="dropCol($event)">
+    <app-board-column *ngFor="let board of boards" [board]="board" [boardName]='board.boardName' cdkDropList [cdkDropListData]="board" (cdkDropListDropped)="dropTasks($event)" cdkDrag></app-board-column>
   </div>
 </div>
