@@ -18,6 +18,11 @@ export class BoardColumnComponent {
 
   tasks!: Task[];
 
+  newBoardName: string = '';
+
+  isHidden: boolean = false;
+  showRenameBoardForm: boolean = false;
+
   constructor(private taskService: TaskService) {}
 
   // ngOnInit(): void {
@@ -50,6 +55,30 @@ export class BoardColumnComponent {
       // Сброс полей ввода
       this.newTaskName = '';
       this.newTaskDescription = '';
+    }
+  }
+
+  showBoardForm() {
+    this.showRenameBoardForm = true;
+    this.newBoardName = this.boardName;
+    this.isHidden = true;
+  }
+
+  abortRenameBoard() {
+    this.showRenameBoardForm = false;
+    this.isHidden = false;
+  }
+
+  clearInput() {
+    this.newBoardName = '';
+  }
+
+  renameBoard(boardName: string) {
+    if(this.newBoardName) {
+      this.taskService.updateBoardName(boardName, this.newBoardName);
+      this.newBoardName = '';
+      this.isHidden = false;
+      console.log(this.board)
     }
   }
 

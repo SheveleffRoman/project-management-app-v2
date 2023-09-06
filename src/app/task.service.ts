@@ -99,11 +99,13 @@ export class TaskService {
       }
     }
   }
+
+  updateBoardName(boardName: string, newName: string) {
+    const board = this.boards.find((board) => board.boardName === boardName);
+
+    if (board) {
+      board.boardName = newName;
+    }
+  }
   
 }
-
-// updateBoardName(boardIndex: number, newName: string) {
-//   if (boardIndex >= 0 && boardIndex < this.boardsAndTasks.length) {
-//     this.boardsAndTasks[boardIndex].boardName = newName;
-//   }
-// }
