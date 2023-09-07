@@ -32,7 +32,7 @@ const routes: Routes = [
     path: '',
     component: WelcomePageComponent,
     children: [
-      { path: '', redirectTo: '/board', pathMatch: 'full' }, // временные изменения для производства
+      { path: '', redirectTo: '/projects', pathMatch: 'full' }, // временные изменения для производства
       { path: 'welcome', redirectTo: '/welcome/product', pathMatch: 'full' },
       { path: 'welcome/product', component: AboutProductComponent },
       { path: 'welcome/tech', component: AboutTechComponent },
@@ -41,7 +41,10 @@ const routes: Routes = [
       { path: 'welcome/signup', component: SignUpComponent },
     ],
   },
-  { path: 'board', component: BoardComponent },
+  { path: 'projects', component: BoardComponent,
+    children: [
+      {path: ':projectName', component: BoardMainContentComponent}
+    ] },
 ];
 
 @NgModule({

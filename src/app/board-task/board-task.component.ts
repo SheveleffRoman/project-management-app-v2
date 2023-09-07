@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Task, TaskObj, TaskService } from '../task.service';
+import { Projects, Task, TaskService } from '../task.service';
 
 
 
@@ -13,8 +13,9 @@ export class BoardTaskComponent {
   selectedPriority: string = 'low';
   confirmation = false;
 
-  @Input() task!: TaskObj;
+  @Input() task!: Task;
   @Input() boardName = '';
+  @Input() projectName!: string;
 
   constructor (private taskService: TaskService) {}
   
@@ -24,7 +25,8 @@ export class BoardTaskComponent {
   }
 
   deleteTask(id: number) {
-    this.taskService.deleteTask(this.boardName, id);
+    console.log(this.projectName)
+    this.taskService.deleteTask(this.projectName, this.boardName, id);
   }
 
   declineOptions() {

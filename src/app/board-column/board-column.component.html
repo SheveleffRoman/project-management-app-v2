@@ -14,7 +14,7 @@
                 d="M16 11.25H12.75V8C12.75 7.59 12.41 7.25 12 7.25C11.59 7.25 11.25 7.59 11.25 8V11.25H8C7.59 11.25 7.25 11.59 7.25 12C7.25 12.41 7.59 12.75 8 12.75H11.25V16C11.25 16.41 11.59 16.75 12 16.75C12.41 16.75 12.75 16.41 12.75 16V12.75H16C16.41 12.75 16.75 12.41 16.75 12C16.75 11.59 16.41 11.25 16 11.25Z"
                 fill="#5030E5" />
         </svg>
-        <svg (click)="showBoardForm()" *ngIf="!isHidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
+        <svg (click)="showBoardRenameForm()" *ngIf="!isHidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
             <path
                 d="M11.25 27.5H18.75C25 27.5 27.5 25 27.5 18.75V11.25C27.5 5 25 2.5 18.75 2.5H11.25C5 2.5 2.5 5 2.5 11.25V18.75C2.5 25 5 27.5 11.25 27.5Z"
                 fill="#5030E5" fill-opacity="0.2" />
@@ -27,7 +27,7 @@
         </svg>
     </div>
     <div class="tasks" >
-        <app-board-task class="task-box" *ngFor="let tasks of board.tasks" [task]="tasks" [boardName]="boardName" cdkDrag
+        <app-board-task class="task-box" *ngFor="let tasks of board.tasks" [task]="tasks" [boardName]="boardName" [projectName]="projectName" cdkDrag
             ></app-board-task>
     </div>
 </div>

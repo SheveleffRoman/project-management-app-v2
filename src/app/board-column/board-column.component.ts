@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
-import { Task, TaskService } from '../task.service';
+import { Board, Projects, Task, TaskService } from '../task.service';
 
 @Component({
   selector: 'app-board-column',
@@ -13,10 +13,11 @@ export class BoardColumnComponent {
   newTaskDescription: string = '';
   showForm: boolean = false;
 
-  @Input() board!: Task;
+  @Input() board!: Board;
   @Input() boardName = '';
+  @Input() projectName: string = '';
 
-  tasks!: Task[];
+  // tasks!: Task[];
 
   newBoardName: string = '';
 
@@ -27,6 +28,10 @@ export class BoardColumnComponent {
 
   // ngOnInit(): void {
   //   this.getTasks();
+  // }
+
+  // getTasks() {
+  //   this.tasks = this.taskService.getTasks(this.boardName)
   // }
 
   showAddForm() {
@@ -43,7 +48,7 @@ export class BoardColumnComponent {
 
   addNewTask() {
     if (this.newTaskName && this.newTaskDescription) {
-      this.taskService.addTask(this.boardName, {
+      this.taskService.addTask(this.projectName, this.boardName, {
         id: this.generateNewId(),
         name: this.newTaskName,
         description: this.newTaskDescription,
@@ -58,7 +63,7 @@ export class BoardColumnComponent {
     }
   }
 
-  showBoardForm() {
+  showBoardRenameForm() {
     this.showRenameBoardForm = true;
     this.newBoardName = this.boardName;
     this.isHidden = true;
@@ -75,7 +80,7 @@ export class BoardColumnComponent {
 
   renameBoard(boardName: string) {
     if(this.newBoardName) {
-      this.taskService.updateBoardName(boardName, this.newBoardName);
+      this.taskService.updateBoardName(this.projectName, boardName, this.newBoardName);
       this.newBoardName = '';
       this.isHidden = false;
       console.log(this.board)

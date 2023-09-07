@@ -1,7 +1,10 @@
 <div class="main_wrapper">
   <div class="board_name_block">
-    <h1 class="board_name">Mobile App</h1>
-    <span><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+    <h1 *ngIf="!isHidden" class="board_name">{{projectName}}</h1>
+    <input *ngIf="isHidden" type="text" [(ngModel)]="newProjectName" (focus)="clearInput()">
+    <button (click)="renameProject()" *ngIf="isHidden">&#9745;</button>
+    <button (click)="abortRenameProject()" *ngIf="isHidden">&#9746;</button>
+    <span *ngIf="!isHidden" (click)="showProjectRenameForm()"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
         <path
           d="M11.25 27.5H18.75C25 27.5 27.5 25 27.5 18.75V11.25C27.5 5 25 2.5 18.75 2.5H11.25C5 2.5 2.5 5 2.5 11.25V18.75C2.5 25 5 27.5 11.25 27.5Z"
           fill="#5030E5" fill-opacity="0.2" />
@@ -12,7 +15,7 @@
           stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
       </svg></span>
     <span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <svg *ngIf="!isHidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
         <path
           d="M9.99333 12.3167H11C13.3828 12.3167 15.3167 10.3829 15.3167 8.00001C15.3167 5.61717 13.3828 3.68334 11 3.68334H10C9.63586 3.68334 9.35 3.97847 9.35 4.33334C9.35 4.68952 9.64382 4.98334 10 4.98334H11C12.6638 4.98334 14.0167 6.33619 14.0167 8.00001C14.0167 9.66383 12.6638 11.0167 11 11.0167H9.99333C9.63716 11.0167 9.34333 11.3105 9.34333 11.6667C9.34333 12.0229 9.63716 12.3167 9.99333 12.3167Z"
           fill="#5030E5" stroke="#5030E5" stroke-width="0.3" />
@@ -71,6 +74,6 @@
     </div>
   </div>
   <div class="boards_wrapper" cdkDropList cdkDropListGroup (cdkDropListDropped)="dropCol($event)">
-    <app-board-column *ngFor="let board of boards" [board]="board" [boardName]='board.boardName' cdkDropList [cdkDropListData]="board" (cdkDropListDropped)="dropTasks($event)" cdkDrag></app-board-column>
+    <app-board-column *ngFor="let board of boards" [board]="board" [projectName]="projectName" [boardName]='board.boardName' cdkDropList [cdkDropListData]="board" (cdkDropListDropped)="dropTasks($event)" cdkDrag></app-board-column>
   </div>
 </div>

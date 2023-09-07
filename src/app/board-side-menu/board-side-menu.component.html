@@ -20,11 +20,11 @@
             <span>+</span>
         </div>
         <div class="project_lists">
-            <ul>
-                <li class="target">
-                    <p>Mobile App</p>
+            <ul *ngFor="let project of projects">
+                <li class="">
+                    <p><a [routerLink]="['/projects', project.projectName]">{{project.projectName}}</a></p>
                 </li>
-                <li>
+                <!-- <li>
                     <p>Website Redesign</p>
                 </li>
                 <li>
@@ -32,7 +32,7 @@
                 </li>
                 <li>
                     <p>Wireframes</p>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>

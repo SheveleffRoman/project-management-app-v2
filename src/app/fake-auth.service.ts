@@ -69,7 +69,7 @@ export class FakeAuthService {
   checkLogIn(): string[] {
     let isAuth = localStorage.getItem('isAuth');
     if (isAuth === 'true') {
-      return ['/board'];
+      return ['/projects'];
     }
     return ['/welcome/login'];
   }

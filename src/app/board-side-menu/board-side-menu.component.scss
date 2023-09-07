@@ -75,6 +75,7 @@ h1.title {
 
     .project_lists li {
         padding: 0.63rem;
+        cursor: pointer;
     }
 
     .project_lists li:not(:last-child) {
