@@ -1,5 +1,6 @@
 .column_block {
     max-width: 22.125rem;
+    min-width: 22.125rem;
     height: auto;
     border-radius: 1rem 1rem 1rem 1rem;
     background: #F5F5F5;
@@ -71,15 +72,15 @@
 }
 
 .center-form {
-    position:fixed;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    top:0px;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0px;
     width: 100vw;
     height: 100vh;
-    left:0px;
-    }
+    left: 0px;
+}
 
 .input_task_form {
     padding: 20px;
