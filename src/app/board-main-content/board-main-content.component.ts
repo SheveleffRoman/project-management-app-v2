@@ -15,18 +15,18 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './board-main-content.component.html',
   styleUrls: ['./board-main-content.component.scss'],
 })
-export class BoardMainContentComponent implements OnInit {
+export class BoardMainContentComponent implements OnInit, DoCheck {
   boards!: Board[];
 
   projectName: string = '';
 
   newProjectName: string = '';
+  prevProjectName: string = '';
   isHidden: boolean = false;
   showRenameProjectForm: boolean = false;
 
   showForm: boolean = false;
   newBoardName: string = '';
-  prevProjectName: string = '';
 
   constructor(
     private taskService: TaskService,
@@ -48,7 +48,7 @@ export class BoardMainContentComponent implements OnInit {
     if (this.projectName !== this.prevProjectName) {
       // Если значение изменилось, выполните здесь необходимые действия
       console.log('projectName изменилось:', this.projectName);
-      this.ngOnInit()
+      this.getBoards(this.projectName)
       // Выполните здесь другие действия, которые вы хотите выполнить при изменении projectName
       this.prevProjectName = this.projectName; // Обновляем prevProjectName
     }
