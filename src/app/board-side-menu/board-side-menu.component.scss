@@ -67,6 +67,10 @@ h1.title {
         gap: 6.25rem;
         margin-left: 0.5rem;
         margin-bottom: 1.31rem;
+
+        h2, span {
+            cursor: pointer;
+        }
     }
 
     // .project_lists {
