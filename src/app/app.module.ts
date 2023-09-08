@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule, Routes } from '@angular/router';
@@ -26,6 +26,7 @@ import { BoardTaskComponent } from './board-task/board-task.component';
 import { BoardSideMenuComponent } from './board-side-menu/board-side-menu.component';
 import { BoardHeaderSearchComponent } from './board-header-search/board-header-search.component';
 import { BoardHeaderProfileComponent } from './board-header-profile/board-header-profile.component';
+import { SnippetProjectsComponent } from './snippet-projects/snippet-projects.component';
 
 const routes: Routes = [
   {
@@ -41,10 +42,14 @@ const routes: Routes = [
       { path: 'welcome/signup', component: SignUpComponent },
     ],
   },
-  { path: 'projects', component: BoardComponent,
+  {
+    path: 'projects',
+    component: BoardComponent,
     children: [
-      {path: ':projectName', component: BoardMainContentComponent}
-    ] },
+      { path: '', component: SnippetProjectsComponent },
+      { path: ':projectName', component: BoardMainContentComponent }
+    ],
+  },
 ];
 
 @NgModule({
@@ -68,6 +73,7 @@ const routes: Routes = [
     BoardSideMenuComponent,
     BoardHeaderSearchComponent,
     BoardHeaderProfileComponent,
+    SnippetProjectsComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,7 +83,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     MatDialogModule,
     DragDropModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
