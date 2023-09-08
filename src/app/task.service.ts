@@ -96,9 +96,37 @@ export class TaskService {
     return this.projects;
   }
 
+  addProject(projectName: string) {
+    const newProject: Projects = {
+      projectName: projectName,
+      boards: [],
+    };
+
+    this.projects.push(newProject);
+  }
+
   getBoards(projectName: string): Board[] {
     const project = this.projects.find((p) => p.projectName === projectName);
     return project ? project.boards : [];
+  }
+
+  addBoard(projectName: string, newBoardName: string) {
+    const project = this.projects.find((p) => p.projectName === projectName);
+
+    if (project) {
+      const existingBoard = project.boards.find(
+        (b) => b.boardName === newBoardName
+      );
+
+      if (!existingBoard) {
+        const newBoard: Board = {
+          boardName: newBoardName,
+          tasks: [],
+        };
+
+        project.boards.push(newBoard);
+      }
+    }
   }
 
   getTasks(boardName: string): Task[] {
