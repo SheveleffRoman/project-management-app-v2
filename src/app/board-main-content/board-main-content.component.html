@@ -14,7 +14,7 @@
         <path d="M15.2125 10.725C15.7625 12.6875 17.3 14.2375 19.275 14.7875" stroke="#5030E5" stroke-width="1.5"
           stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
       </svg></span>
-    <span>
+    <span (click)="showAddForm()">
       <svg *ngIf="!isHidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
         <path
           d="M9.99333 12.3167H11C13.3828 12.3167 15.3167 10.3829 15.3167 8.00001C15.3167 5.61717 13.3828 3.68334 11 3.68334H10C9.63586 3.68334 9.35 3.97847 9.35 4.33334C9.35 4.68952 9.64382 4.98334 10 4.98334H11C12.6638 4.98334 14.0167 6.33619 14.0167 8.00001C14.0167 9.66383 12.6638 11.0167 11 11.0167H9.99333C9.63716 11.0167 9.34333 11.3105 9.34333 11.6667C9.34333 12.0229 9.63716 12.3167 9.99333 12.3167Z"
@@ -75,5 +75,13 @@
   </div>
   <div class="boards_wrapper" cdkDropList cdkDropListGroup (cdkDropListDropped)="dropCol($event)">
     <app-board-column *ngFor="let board of boards" [board]="board" [projectName]="projectName" [boardName]='board.boardName' cdkDropList [cdkDropListData]="board" (cdkDropListDropped)="dropTasks($event)" cdkDrag></app-board-column>
+  </div>
+</div>
+<div *ngIf="showForm" class="center-form">
+  <!-- Форма для добавления новой задачи -->
+  <div class="input_task_form">
+      <input [(ngModel)]="newBoardName" placeholder="Task Name" class="input_name">
+      <button (click)="addBoard()" class="input_task_btn">Add</button>
+      <button (click)="closeAddColForm()" class="input_task_btn">X</button>
   </div>
 </div>

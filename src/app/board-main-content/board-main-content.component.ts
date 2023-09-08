@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Board, Projects, Task, TaskService } from '../task.service';
 import {
   CdkDragDrop,
@@ -24,6 +24,10 @@ export class BoardMainContentComponent implements OnInit {
   isHidden: boolean = false;
   showRenameProjectForm: boolean = false;
 
+  showForm: boolean = false;
+  newBoardName: string = '';
+  prevProjectName: string = '';
+
   constructor(
     private taskService: TaskService,
     private route: ActivatedRoute
@@ -34,8 +38,20 @@ export class BoardMainContentComponent implements OnInit {
       this.projectName = decodeURIComponent(params['projectName']);
     });
 
+    this.prevProjectName = this.projectName; 
     this.getBoards(this.projectName);
     console.log(this.boards);
+  }
+
+  ngDoCheck(): void {
+    // Сравниваем текущее значение projectName с предыдущим значением
+    if (this.projectName !== this.prevProjectName) {
+      // Если значение изменилось, выполните здесь необходимые действия
+      console.log('projectName изменилось:', this.projectName);
+      this.ngOnInit()
+      // Выполните здесь другие действия, которые вы хотите выполнить при изменении projectName
+      this.prevProjectName = this.projectName; // Обновляем prevProjectName
+    }
   }
 
   getBoards(projectName: string) {
@@ -86,5 +102,20 @@ export class BoardMainContentComponent implements OnInit {
       this.isHidden = false;
       // console.log(this.projectName);
     }
+  }
+
+  addBoard() {
+    this.taskService.addBoard(this.projectName, this.newBoardName);
+    this.showForm = false;
+  }
+
+  showAddForm() {
+    this.showForm = true;
+    this.newBoardName = '';
+  }
+
+  closeAddColForm() {
+    this.newBoardName = '';
+    this.showForm = false;
   }
 }

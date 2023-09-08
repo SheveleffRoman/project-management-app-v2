@@ -74,3 +74,14 @@
 .boards_wrapper.cdk-drop-list-dragging .task-box:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+.center-form {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0px;
+    width: 100vw;
+    height: 100vh;
+    left: 0px;
+}
