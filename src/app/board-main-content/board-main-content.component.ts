@@ -8,7 +8,7 @@ import {
   CdkDropListGroup,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-board-main-content',
@@ -30,7 +30,8 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
   constructor(
     private taskService: TaskService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -117,5 +118,10 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   closeAddColForm() {
     this.newBoardName = '';
     this.showForm = false;
+  }
+
+  deleteProject(projectName: string) {
+    this.taskService.deleteProject(projectName);
+    this.router.navigate(['/projects']);
   }
 }

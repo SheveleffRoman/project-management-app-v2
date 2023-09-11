@@ -105,6 +105,14 @@ export class TaskService {
     this.projects.push(newProject);
   }
 
+  deleteProject(projectName: string) {
+    const projectIndex = this.projects.findIndex((p) => p.projectName === projectName);
+  
+    if (projectIndex !== -1) {
+      this.projects.splice(projectIndex, 1);
+    }
+  }
+
   getBoards(projectName: string): Board[] {
     const project = this.projects.find((p) => p.projectName === projectName);
     return project ? project.boards : [];
@@ -125,6 +133,19 @@ export class TaskService {
         };
 
         project.boards.push(newBoard);
+      }
+    }
+  }
+
+  deleteBoard(projectName: string, boardName: string) {
+    const projectIndex = this.projects.findIndex((p) => p.projectName === projectName);
+  
+    if (projectIndex !== -1) {
+      const project = this.projects[projectIndex];
+      const boardIndex = project.boards.findIndex((b) => b.boardName === boardName);
+  
+      if (boardIndex !== -1) {
+        project.boards.splice(boardIndex, 1);
       }
     }
   }

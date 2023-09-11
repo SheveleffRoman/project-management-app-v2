@@ -4,6 +4,7 @@
         <input *ngIf="isHidden" type="text" [(ngModel)]="newBoardName" (focus)="clearInput()">
         <button (click)="renameBoard(boardName)" *ngIf="isHidden">&#9745;</button>
         <button (click)="abortRenameBoard()" *ngIf="isHidden">&#9746;</button>
+        <button (click)="deleteBoard(projectName, boardName)" *ngIf="isHidden">&#9747;</button>
         <span>{{board.tasks.length}}</span>
         <svg *ngIf="!isHidden" (click)="showAddForm()" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
             fill="none">

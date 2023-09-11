@@ -87,6 +87,10 @@ export class BoardColumnComponent {
     }
   }
 
+  deleteBoard(projectName: string, boardName: string) {
+    this.taskService.deleteBoard(projectName, boardName)
+  }
+
   private generateNewId(): number {
     // Генерирует новый уникальный ID
     // Например, можно использовать временную метку
