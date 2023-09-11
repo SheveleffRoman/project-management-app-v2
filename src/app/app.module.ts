@@ -27,6 +27,7 @@ import { BoardSideMenuComponent } from './board-side-menu/board-side-menu.compon
 import { BoardHeaderSearchComponent } from './board-header-search/board-header-search.component';
 import { BoardHeaderProfileComponent } from './board-header-profile/board-header-profile.component';
 import { SnippetProjectsComponent } from './snippet-projects/snippet-projects.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 
 const routes: Routes = [
   {
@@ -74,6 +75,7 @@ const routes: Routes = [
     BoardHeaderSearchComponent,
     BoardHeaderProfileComponent,
     SnippetProjectsComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,
