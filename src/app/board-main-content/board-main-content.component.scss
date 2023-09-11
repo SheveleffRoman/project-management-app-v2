@@ -59,7 +59,8 @@
 .boards_wrapper {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     gap: 2rem;
 }
 
