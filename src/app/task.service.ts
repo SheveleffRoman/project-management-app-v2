@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Injectable, runInInjectionContext } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
 } from './confirmation-dialog/confirmation-dialog.component';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { TaskChangeDialogComponent, taskChangeData } from './task-change-dialog/task-change-dialog.component';
 
 export interface Projects {
   projectName: string;
@@ -112,6 +113,15 @@ export class TaskService {
       })
     );
   }
+
+  showTaskChangeDialog(name: string, description: string): Observable<taskChangeData> {
+    const taskChangeDialogData: taskChangeData = { name, description };
+    const dialogRef = this.dialog.open(TaskChangeDialogComponent, {
+      data: taskChangeDialogData,
+    });
+    return dialogRef.afterClosed();
+  }
+  
 
   getProjects(): Projects[] {
     return this.projects;
@@ -237,6 +247,34 @@ export class TaskService {
         }
       }
     );
+  }
+
+  updateTask(projectName: string, boardName: string, taskId: number, taskData: taskChangeData) {
+    // Открываем диалоговое окно
+    const dialogRef = this.showTaskChangeDialog(taskData.name, taskData.description);
+  
+    // Ожидаем закрытия диалогового окна и получаем результат
+    dialogRef.subscribe((result) => {
+      if (result) {
+        console.log(result)
+        // Пользователь подтвердил обновление задачи
+        const project = this.projects.find((p) => p.projectName === projectName);
+  
+        if (project) {
+          const board = project.boards.find((b) => b.boardName === boardName);
+  
+          if (board) {
+            const task = board.tasks.find((t) => t.id === taskId);
+  
+            if (task) {
+              // Обновляем данные задачи
+              task.name = result.name;
+              task.description = result.description;
+            }
+          }
+        }
+      }
+    });
   }
 
   updateProjectName(projectName: string, newName: string) {

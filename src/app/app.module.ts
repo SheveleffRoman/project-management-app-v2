@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Input, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -29,6 +29,10 @@ import { BoardHeaderProfileComponent } from './board-header-profile/board-header
 import { SnippetProjectsComponent } from './snippet-projects/snippet-projects.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
+import { TaskChangeDialogComponent } from './task-change-dialog/task-change-dialog.component';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 const routes: Routes = [
   {
@@ -77,6 +81,7 @@ const routes: Routes = [
     BoardHeaderProfileComponent,
     SnippetProjectsComponent,
     ConfirmationDialogComponent,
+    TaskChangeDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,7 +93,8 @@ const routes: Routes = [
     DragDropModule,
     FormsModule,
     MatButtonModule,
-    MatDialogModule
+    MatFormFieldModule,
+    MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

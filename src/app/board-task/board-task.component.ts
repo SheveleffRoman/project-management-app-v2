@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Projects, Task, TaskService } from '../task.service';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { TaskChangeDialogComponent, taskChangeData } from '../task-change-dialog/task-change-dialog.component';
 
 
 
@@ -17,7 +19,7 @@ export class BoardTaskComponent {
   @Input() boardName = '';
   @Input() projectName!: string;
 
-  constructor (private taskService: TaskService) {}
+  constructor (private taskService: TaskService, public dialog: MatDialog) {}
   
 
   showOptions() {
@@ -31,5 +33,9 @@ export class BoardTaskComponent {
 
   declineOptions() {
     this.confirmation = false;
+  }
+
+  updateTask() {
+    this.taskService.updateTask(this.projectName, this.boardName, this.task.id, this.task)
   }
 }
