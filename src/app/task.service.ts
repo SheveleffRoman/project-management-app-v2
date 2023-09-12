@@ -1,4 +1,11 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from './confirmation-dialog/confirmation-dialog.component';
+import { Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface Projects {
   projectName: string;
@@ -90,7 +97,21 @@ export class TaskService {
       ],
     },
   ];
-  constructor() {}
+  constructor(public dialog: MatDialog, private router: Router) {}
+
+  showConfirmationDialog(title: string, message: string): Observable<boolean> {
+    const confirmDialogData: ConfirmationDialogData = { title, message };
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: confirmDialogData,
+    });
+
+    return dialogRef.afterClosed().pipe(
+      tap((result) => {
+        console.log('Диалоговое окно закрыто, результат:', result);
+      })
+    );
+  }
 
   getProjects(): Projects[] {
     return this.projects;
@@ -106,11 +127,20 @@ export class TaskService {
   }
 
   deleteProject(projectName: string) {
-    const projectIndex = this.projects.findIndex((p) => p.projectName === projectName);
-  
-    if (projectIndex !== -1) {
-      this.projects.splice(projectIndex, 1);
-    }
+    this.showConfirmationDialog('', `${projectName} project`).subscribe(
+      (result: boolean) => {
+        if (result) {
+          // Если пользователь подтвердил удаление
+          const projectIndex = this.projects.findIndex(
+            (p) => p.projectName === projectName
+          );
+          if (projectIndex !== -1) {
+            this.projects.splice(projectIndex, 1);
+          }
+          this.router.navigate(['/projects']);
+        }
+      }
+    );
   }
 
   getBoards(projectName: string): Board[] {
@@ -138,16 +168,25 @@ export class TaskService {
   }
 
   deleteBoard(projectName: string, boardName: string) {
-    const projectIndex = this.projects.findIndex((p) => p.projectName === projectName);
-  
-    if (projectIndex !== -1) {
-      const project = this.projects[projectIndex];
-      const boardIndex = project.boards.findIndex((b) => b.boardName === boardName);
-  
-      if (boardIndex !== -1) {
-        project.boards.splice(boardIndex, 1);
+    this.showConfirmationDialog('', `${boardName} board`).subscribe((result: boolean) => {
+      if (result) {
+        // Если пользователь подтвердил удаление
+        const projectIndex = this.projects.findIndex(
+          (p) => p.projectName === projectName
+        );
+
+        if (projectIndex !== -1) {
+          const project = this.projects[projectIndex];
+          const boardIndex = project.boards.findIndex(
+            (b) => b.boardName === boardName
+          );
+
+          if (boardIndex !== -1) {
+            project.boards.splice(boardIndex, 1);
+          }
+        }
       }
-    }
+    });
   }
 
   getTasks(boardName: string): Task[] {
@@ -175,20 +214,29 @@ export class TaskService {
     }
   }
 
-  deleteTask(projectName: string, boardName: string, id: number) {
-    const project = this.projects.find((p) => p.projectName === projectName);
+  deleteTask(projectName: string, boardName: string, id: number, taskName: string) {
+    this.showConfirmationDialog('', `${taskName} task`).subscribe(
+      (result: boolean) => {
+        if (result) {
+          // Если пользователь подтвердил удаление
+          const project = this.projects.find(
+            (p) => p.projectName === projectName
+          );
 
-    if (project) {
-      const board = project.boards.find((b) => b.boardName === boardName);
+          if (project) {
+            const board = project.boards.find((b) => b.boardName === boardName);
 
-      if (board) {
-        const taskIndex = board.tasks.findIndex((t) => t.id === id);
+            if (board) {
+              const taskIndex = board.tasks.findIndex((t) => t.id === id);
 
-        if (taskIndex !== -1) {
-          board.tasks.splice(taskIndex, 1);
+              if (taskIndex !== -1) {
+                board.tasks.splice(taskIndex, 1);
+              }
+            }
+          }
         }
       }
-    }
+    );
   }
 
   updateProjectName(projectName: string, newName: string) {

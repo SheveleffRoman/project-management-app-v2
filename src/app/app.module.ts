@@ -28,6 +28,7 @@ import { BoardHeaderSearchComponent } from './board-header-search/board-header-s
 import { BoardHeaderProfileComponent } from './board-header-profile/board-header-profile.component';
 import { SnippetProjectsComponent } from './snippet-projects/snippet-projects.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [
   {
@@ -86,6 +87,8 @@ const routes: Routes = [
     MatDialogModule,
     DragDropModule,
     FormsModule,
+    MatButtonModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent],

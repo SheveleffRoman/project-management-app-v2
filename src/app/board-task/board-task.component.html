@@ -8,7 +8,7 @@
         <span (click)="showOptions()">...</span>
         <div *ngIf="confirmation" class="delete_confirmation" (mouseleave)="declineOptions()">
             <button>Change</button>
-            <button (click)="deleteTask(task.id)">Delete</button>
+            <button (click)="deleteTask(task.id, task.name)">Delete</button>
         </div>
     </div>
     <h1>{{task.name}}</h1>

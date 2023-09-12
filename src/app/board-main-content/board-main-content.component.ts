@@ -122,6 +122,6 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
   deleteProject(projectName: string) {
     this.taskService.deleteProject(projectName);
-    this.router.navigate(['/projects']);
+    // this.router.navigate(['/projects']);
   }
 }

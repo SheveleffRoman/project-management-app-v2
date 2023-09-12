@@ -24,9 +24,9 @@ export class BoardTaskComponent {
     this.confirmation = true;
   }
 
-  deleteTask(id: number) {
+  deleteTask(id: number, taskName: string) {
     console.log(this.projectName)
-    this.taskService.deleteTask(this.projectName, this.boardName, id);
+    this.taskService.deleteTask(this.projectName, this.boardName, id, taskName);
   }
 
   declineOptions() {
