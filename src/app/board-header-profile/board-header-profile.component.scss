@@ -40,3 +40,39 @@
     border-radius: 50%;
     overflow: hidden;
 }
+
+.options_arrow {
+    cursor: pointer;
+}
+
+.options {
+    position: absolute;
+    right: 17px;
+    color: #787486;
+    font-family: Inter;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    height: auto;
+    width: auto;
+    background: #ececec;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 1rem;
+    z-index: 1;
+
+    button {
+        padding: 0.4rem;
+        border-radius: 1rem;
+    }
+
+    button:hover{
+        background-color: #aeaeae;
+    }
+}

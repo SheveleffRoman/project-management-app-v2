@@ -1,12 +1,16 @@
 <div class="profile_block">
     <div class="meta_profile">
         <h3>{{name | slice:1:-1}}</h3>
-        <p>Tbilisi, Georgia</p>
+        <p>{{location}}</p>
     </div>
     <div class="profile_photo">
         <img src="../../assets/bef8aecd2e54d68c4d642e43a47c99ab.png">
     </div>
     <div class="profile_arrow">
-        <span>&darr;</span>
+        <span class="options_arrow" (click)="showOptions()">&darr;</span>
     </div>
+</div>
+<div *ngIf="options" class="options" (mouseleave)="declineOptions()">
+    <button (click)="updateProfile()">Change</button>
+    <button>Logout</button>
 </div>

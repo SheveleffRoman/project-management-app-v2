@@ -33,6 +33,7 @@ import { TaskChangeDialogComponent } from './task-change-dialog/task-change-dial
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { ProfileChangeDialogComponent } from './profile-change-dialog/profile-change-dialog.component';
 
 const routes: Routes = [
   {
@@ -82,6 +83,7 @@ const routes: Routes = [
     SnippetProjectsComponent,
     ConfirmationDialogComponent,
     TaskChangeDialogComponent,
+    ProfileChangeDialogComponent,
   ],
   imports: [
     BrowserModule,
