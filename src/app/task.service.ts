@@ -123,6 +123,7 @@ export class TaskService {
   ): Observable<taskChangeData> {
     const taskChangeDialogData: taskChangeData = { name, description };
     const dialogRef = this.dialog.open(TaskChangeDialogComponent, {
+      width: '400px',
       data: taskChangeDialogData,
     });
     return dialogRef.afterClosed();
