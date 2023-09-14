@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FakeAuthService } from '../fake-auth.service';
 
 @Component({
   selector: 'app-header',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
   showHiddenContent = false;
+
+  constructor(private authService: FakeAuthService) {}
+
+  checkLogIn(): string[] {
+    return this.authService.checkLogIn();
+  }
 }
