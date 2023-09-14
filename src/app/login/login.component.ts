@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
       if (this.authService.login(username, password)) {
         this.authService.setLoggedInUser(username); // Сохранение имени пользователя
         localStorage.setItem('loggedInUser', JSON.stringify(username));
-        this.router.navigate(['board']);
+        this.router.navigate(['projects']);
     } else {
       // Обработка ошибки входа
     }

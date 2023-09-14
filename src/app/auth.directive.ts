@@ -19,7 +19,7 @@ export class AuthDirective {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();
-      this.router.navigate(['']);
+      this.router.navigate(['/welcome']);  // тут можно сделать редирект на компонент который покажет, что нет логина
     }
   }
 }
