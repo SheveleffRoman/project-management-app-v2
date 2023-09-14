@@ -6,7 +6,10 @@ import {
 } from './confirmation-dialog/confirmation-dialog.component';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { TaskChangeDialogComponent, taskChangeData } from './task-change-dialog/task-change-dialog.component';
+import {
+  TaskChangeDialogComponent,
+  taskChangeData,
+} from './task-change-dialog/task-change-dialog.component';
 
 export interface Projects {
   projectName: string;
@@ -114,14 +117,16 @@ export class TaskService {
     );
   }
 
-  showTaskChangeDialog(name: string, description: string): Observable<taskChangeData> {
+  showTaskChangeDialog(
+    name: string,
+    description: string
+  ): Observable<taskChangeData> {
     const taskChangeDialogData: taskChangeData = { name, description };
     const dialogRef = this.dialog.open(TaskChangeDialogComponent, {
       data: taskChangeDialogData,
     });
     return dialogRef.afterClosed();
   }
-  
 
   getProjects(): Projects[] {
     return this.projects;
@@ -153,6 +158,14 @@ export class TaskService {
     );
   }
 
+  updateProjectName(projectName: string, newName: string) {
+    const project = this.projects.find((p) => p.projectName === projectName);
+
+    if (project) {
+      project.projectName = newName;
+    }
+  }
+
   getBoards(projectName: string): Board[] {
     const project = this.projects.find((p) => p.projectName === projectName);
     return project ? project.boards : [];
@@ -178,25 +191,39 @@ export class TaskService {
   }
 
   deleteBoard(projectName: string, boardName: string) {
-    this.showConfirmationDialog('', `${boardName} board`).subscribe((result: boolean) => {
-      if (result) {
-        // Если пользователь подтвердил удаление
-        const projectIndex = this.projects.findIndex(
-          (p) => p.projectName === projectName
-        );
-
-        if (projectIndex !== -1) {
-          const project = this.projects[projectIndex];
-          const boardIndex = project.boards.findIndex(
-            (b) => b.boardName === boardName
+    this.showConfirmationDialog('', `${boardName} board`).subscribe(
+      (result: boolean) => {
+        if (result) {
+          // Если пользователь подтвердил удаление
+          const projectIndex = this.projects.findIndex(
+            (p) => p.projectName === projectName
           );
 
-          if (boardIndex !== -1) {
-            project.boards.splice(boardIndex, 1);
+          if (projectIndex !== -1) {
+            const project = this.projects[projectIndex];
+            const boardIndex = project.boards.findIndex(
+              (b) => b.boardName === boardName
+            );
+
+            if (boardIndex !== -1) {
+              project.boards.splice(boardIndex, 1);
+            }
           }
         }
       }
-    });
+    );
+  }
+
+  updateBoardName(projectName: string, boardName: string, newName: string) {
+    const project = this.projects.find((p) => p.projectName === projectName);
+
+    if (project) {
+      const board = project.boards.find((b) => b.boardName === boardName);
+
+      if (board) {
+        board.boardName = newName;
+      }
+    }
   }
 
   getTasks(boardName: string): Task[] {
@@ -224,7 +251,12 @@ export class TaskService {
     }
   }
 
-  deleteTask(projectName: string, boardName: string, id: number, taskName: string) {
+  deleteTask(
+    projectName: string,
+    boardName: string,
+    id: number,
+    taskName: string
+  ) {
     this.showConfirmationDialog('', `${taskName} task`).subscribe(
       (result: boolean) => {
         if (result) {
@@ -249,23 +281,33 @@ export class TaskService {
     );
   }
 
-  updateTask(projectName: string, boardName: string, taskId: number, taskData: taskChangeData) {
+  updateTask(
+    projectName: string,
+    boardName: string,
+    taskId: number,
+    taskData: taskChangeData
+  ) {
     // Открываем диалоговое окно
-    const dialogRef = this.showTaskChangeDialog(taskData.name, taskData.description);
-  
+    const dialogRef = this.showTaskChangeDialog(
+      taskData.name,
+      taskData.description
+    );
+
     // Ожидаем закрытия диалогового окна и получаем результат
     dialogRef.subscribe((result) => {
       if (result) {
-        console.log(result)
+        console.log(result);
         // Пользователь подтвердил обновление задачи
-        const project = this.projects.find((p) => p.projectName === projectName);
-  
+        const project = this.projects.find(
+          (p) => p.projectName === projectName
+        );
+
         if (project) {
           const board = project.boards.find((b) => b.boardName === boardName);
-  
+
           if (board) {
             const task = board.tasks.find((t) => t.id === taskId);
-  
+
             if (task) {
               // Обновляем данные задачи
               task.name = result.name;
@@ -275,26 +317,6 @@ export class TaskService {
         }
       }
     });
-  }
-
-  updateProjectName(projectName: string, newName: string) {
-    const project = this.projects.find((p) => p.projectName === projectName);
-
-    if (project) {
-      project.projectName = newName;
-    }
-  }
-
-  updateBoardName(projectName: string, boardName: string, newName: string) {
-    const project = this.projects.find((p) => p.projectName === projectName);
-
-    if (project) {
-      const board = project.boards.find((b) => b.boardName === boardName);
-
-      if (board) {
-        board.boardName = newName;
-      }
-    }
   }
 }
 
