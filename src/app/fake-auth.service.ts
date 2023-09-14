@@ -50,7 +50,7 @@ export class FakeAuthService {
     localStorage.setItem('isAuth', 'false');
     localStorage.removeItem('loggedInUser');
     setTimeout(() => {
-      this.router.navigate(['']);
+      this.router.navigate(['/welcome']);
     }, 1500);
   }
 
