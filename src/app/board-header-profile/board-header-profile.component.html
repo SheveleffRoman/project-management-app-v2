@@ -12,5 +12,6 @@
 </div>
 <div *ngIf="options" class="options" (mouseleave)="declineOptions()">
     <button (click)="updateProfile()">Change</button>
-    <button>Logout</button>
+    <button>Delete User</button>
+    <button (click)="logout()">Logout</button>
 </div>

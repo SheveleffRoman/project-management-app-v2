@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ProfileChangeDialogComponent } from '../profile-change-dialog/profile-change-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SlicePipe } from '@angular/common';
+import { FakeAuthService } from '../fake-auth.service';
 
 @Component({
   selector: 'app-board-header-profile',
@@ -10,7 +11,7 @@ import { SlicePipe } from '@angular/common';
   styleUrls: ['./board-header-profile.component.scss'],
 })
 export class BoardHeaderProfileComponent implements OnInit {
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private authService: FakeAuthService) {}
 
   name: string | null = null;
   location?: string = 'Tbilisi, Georgia';
@@ -51,10 +52,15 @@ export class BoardHeaderProfileComponent implements OnInit {
   updateProfile() {
     this.showChangeDialog().subscribe((result) => {
       if (result) {
+        
         this.name = result.name;
         this.location = result.location;
       }
     });
+  }
+
+  logout() {
+    this.authService.logout()
   }
 }
 
