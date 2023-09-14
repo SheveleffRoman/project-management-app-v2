@@ -40,7 +40,7 @@ const routes: Routes = [
     path: '',
     component: WelcomePageComponent,
     children: [
-      { path: '', redirectTo: '/projects', pathMatch: 'full' }, // временные изменения для производства
+      { path: '', redirectTo: '/welcome/product', pathMatch: 'full' }, // временные изменения для производства
       { path: 'welcome', redirectTo: '/welcome/product', pathMatch: 'full' },
       { path: 'welcome/product', component: AboutProductComponent },
       { path: 'welcome/tech', component: AboutTechComponent },
