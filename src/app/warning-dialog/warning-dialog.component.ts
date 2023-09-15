@@ -21,4 +21,6 @@ export class WarningDialogComponent {
 export interface ErrorDialogData {
   title: string;
   message: string;
+  button: string;
+  callback?: () => void;
 }

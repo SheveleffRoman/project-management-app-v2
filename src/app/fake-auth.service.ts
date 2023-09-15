@@ -17,15 +17,18 @@ export class FakeAuthService {
 
   constructor(private router: Router, public dialog: MatDialog) {}
 
-  showErrorDialog(title: string, message: string) {
-    const errorDialogData: ErrorDialogData = { title, message };
+  showErrorDialog(title: string, message: string, button: string = 'Закрыть', callback?: () => void) {
+    const errorDialogData: ErrorDialogData = { title, message, button };
     const dialogRef = this.dialog.open(WarningDialogComponent, {
       width: '400px',
       data: errorDialogData,
     });
-
+  
     dialogRef.afterClosed().subscribe(() => {
       console.log('Модальное окно закрыто');
+      if (callback) {
+        callback(); // Вызываем колбэк-функцию только после закрытия окна
+      }
     });
   }
 
@@ -49,9 +52,19 @@ export class FakeAuthService {
     this.isAuthenticated = false;
     localStorage.setItem('isAuth', 'false');
     localStorage.removeItem('loggedInUser');
-    setTimeout(() => {
-      this.router.navigate(['/welcome']);
-    }, 1500);
+    this.showErrorDialog(
+      'Вы вышли из аккаунта',
+      'После нажатия на кнопку вы будете перенаправлены на главную страницу',
+      'Перейти на главную',
+      () => {
+        // Колбэк-функция будет вызвана после закрытия диалога
+        this.router.navigate(['/welcome']);
+      }
+    );
+    // setTimeout(() => {
+    //   this.dialog.closeAll();
+    //   this.router.navigate(['/welcome']);
+    // }, 2500);
   }
 
   // isLoggedIn(): boolean {
