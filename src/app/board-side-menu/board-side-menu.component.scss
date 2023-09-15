@@ -10,13 +10,14 @@
     position: fixed;
 }
 
-h1.title {
+.title {
     color: #0D062D;
     font-family: Inter;
     font-size: 1.25rem;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+    cursor: pointer;
 }
 
 .title_wrapper {
@@ -26,6 +27,9 @@ h1.title {
     margin-left: 1.38rem;
     gap: 2.88rem;
     align-items: baseline;
+    .show_menu {
+        cursor: not-allowed;
+    }
 }
 
 .title_block {
@@ -39,6 +43,9 @@ h1.title {
     margin-left: 1.37rem;
     margin-top: 2.06rem;
     margin-bottom: 2.09rem;
+    li {
+        cursor: not-allowed;
+    }
 }
 
 .main_menu_block li:not(:last-child) {
