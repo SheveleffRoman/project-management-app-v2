@@ -6,6 +6,9 @@ import {
   ErrorDialogData,
   WarningDialogComponent,
 } from './warning-dialog/warning-dialog.component';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { User } from './sign-up/sign-up.component';
 
 @Injectable({
   providedIn: 'root',
@@ -13,9 +16,11 @@ import {
 export class FakeAuthService {
   private isAuthenticated = false;
 
+  private apiUrl = 'https://sheveleffroman-final-task-backend.onrender.com';
+
   private loggedInUser: string | null = null;
 
-  constructor(private router: Router, public dialog: MatDialog) {}
+  constructor(private router: Router, public dialog: MatDialog, private http: HttpClient) {}
 
   showErrorDialog(title: string, message: string, button: string = 'Закрыть', callback?: () => void) {
     const errorDialogData: ErrorDialogData = { title, message, button };
@@ -31,6 +36,26 @@ export class FakeAuthService {
       }
     });
   }
+
+  // signUp(name: string, login: string, password: string): Observable<any> {
+  //   // Создайте объект данных для регистрации
+  //   const registrationData = { name, login, password };
+
+  //   // Отправьте POST-запрос на сервер для регистрации
+  //   return this.http.post<any>('/api/signup', registrationData);
+  // }
+  
+
+ signUp(name: string, login: string, password: string): Observable<any> {
+    // Создайте объект данных для регистрации
+    const registrationData = { name, login, password };
+
+    // Отправьте POST-запрос на сервер для регистрации
+    return this.http.post<any>(`${this.apiUrl}/auth/signup`, registrationData);
+  }
+
+
+
 
   login(username: string, password: string): boolean {
     // Здесь вы можете сравнивать данные с какими-то предопределенными значениями
