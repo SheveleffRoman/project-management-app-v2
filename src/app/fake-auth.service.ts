@@ -7,7 +7,7 @@ import {
   WarningDialogComponent,
 } from './warning-dialog/warning-dialog.component';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { User } from './sign-up/sign-up.component';
 
 @Injectable({
@@ -36,14 +36,6 @@ export class FakeAuthService {
       }
     });
   }
-
-  // signUp(name: string, login: string, password: string): Observable<any> {
-  //   // Создайте объект данных для регистрации
-  //   const registrationData = { name, login, password };
-
-  //   // Отправьте POST-запрос на сервер для регистрации
-  //   return this.http.post<any>('/api/signup', registrationData);
-  // }
   
 
  signUp(name: string, login: string, password: string): Observable<any> {
@@ -54,24 +46,55 @@ export class FakeAuthService {
     return this.http.post<any>(`${this.apiUrl}/auth/signup`, registrationData);
   }
 
-
-
-
-  login(username: string, password: string): boolean {
-    // Здесь вы можете сравнивать данные с какими-то предопределенными значениями
-    if (username === 'roman' && password === 'Romanik16)') {
-      this.isAuthenticated = true;
-      localStorage.setItem('isAuth', 'true');
-      return true;
-    } else {
-      // Показать универсальное модальное окно с предупреждением об ошибке
-      this.showErrorDialog(
-        'Ошибка входа',
-        'Неправильные учетные данные. Пожалуйста, проверьте ваше имя пользователя и пароль.'
-      );
-      return false;
-    }
+  login (login: string, password: string): Observable<any> {
+    const authenticationData = { login, password };
+    return this.http.post<any>(`${this.apiUrl}/auth/signin`, authenticationData)
   }
+
+  // login(login: string, password: string): Observable<boolean> {
+  //   // Создайте объект данных для аутентификации
+  //   const authenticationData = { login, password };
+
+  //   // Отправьте POST-запрос на сервер для аутентификации
+  //   return this.http.post<any>(`${this.apiUrl}/auth/signin`, authenticationData)
+  //     .pipe(
+  //       map(response => {
+  //         // Если сервер вернул успешный ответ, устанавливаем флаг аутентификации
+  //         // и сохраняем информацию об аутентификации в локальном хранилище
+  //         if (response) {
+  //           this.isAuthenticated = true;
+            // localStorage.setItem('isAuth', 'true');
+  //           return true;
+  //         } else {
+  //           // Если сервер вернул ошибку, обрабатываем её здесь
+  //           // Показываем модальное окно с сообщением об ошибке
+  //           this.showErrorDialog(
+              // 'Ошибка входа',
+              // 'Неправильные учетные данные. Пожалуйста, проверьте ваше имя пользователя и пароль.'
+  //           );
+  //           return false;
+  //         }
+  //       })
+  //     );
+  // }
+
+
+
+  // login(username: string, password: string): boolean {
+  //   // Здесь вы можете сравнивать данные с какими-то предопределенными значениями
+  //   if (username === 'roman' && password === 'Romanik16)') {
+  //     this.isAuthenticated = true;
+  //     localStorage.setItem('isAuth', 'true');
+  //     return true;
+  //   } else {
+  //     // Показать универсальное модальное окно с предупреждением об ошибке
+  //     this.showErrorDialog(
+  //       'Ошибка входа',
+  //       'Неправильные учетные данные. Пожалуйста, проверьте ваше имя пользователя и пароль.'
+  //     );
+  //     return false;
+  //   }
+  // }
 
   logout(): void {
     this.isAuthenticated = false;
