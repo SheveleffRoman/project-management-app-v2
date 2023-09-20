@@ -73,6 +73,7 @@ export class LoginComponent implements OnInit {
         console.log('Вход прошел успешно:', response);
         this.isLoading = false; // Скрыть индикатор загрузки
         this.buttonText = 'Log in';
+        this.authService.saveToken(this.logInSection.controls.login.value!, response.token);
         this.authService.setLoggedInUser(this.logInSection.controls.login.value!); // Сохранение имени пользователя
         localStorage.setItem('loggedInUser', JSON.stringify(this.logInSection.controls.login.value!));
         localStorage.setItem('isAuth', 'true');

@@ -23,7 +23,7 @@ export class BoardHeaderProfileComponent implements OnInit {
   }
 
   findName(): void {
-    let name = localStorage.getItem('loggedInUser');
+    let name = localStorage.getItem('login');
     if (name) {
       this.name = name;
     }

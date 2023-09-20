@@ -51,6 +51,11 @@ export class FakeAuthService {
     return this.http.post<any>(`${this.apiUrl}/auth/signin`, authenticationData)
   }
 
+  saveToken(login: string, token: string) {
+    localStorage.setItem('login', login);
+    localStorage.setItem('token', token);
+  }
+
   // login(login: string, password: string): Observable<boolean> {
   //   // Создайте объект данных для аутентификации
   //   const authenticationData = { login, password };
