@@ -1,7 +1,7 @@
 <div class="profile_block">
     <div class="meta_profile">
-        <h3>{{ name }}</h3>
-        <p>{{location}}</p>
+        <h3>{{ login }}</h3>
+        <!-- <p>{{location}}</p> -->
     </div>
     <div class="profile_photo">
         <img src="../../assets/bef8aecd2e54d68c4d642e43a47c99ab.png">
@@ -12,6 +12,6 @@
 </div>
 <div *ngIf="options" class="options" (mouseleave)="declineOptions()">
     <button (click)="updateProfile()">Change</button>
-    <button>Delete User</button>
+    <button (click)="deleteProfile()">Delete User</button>
     <button (click)="logout()">Logout</button>
 </div>
