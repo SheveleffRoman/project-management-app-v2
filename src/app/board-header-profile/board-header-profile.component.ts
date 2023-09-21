@@ -38,6 +38,7 @@ export class BoardHeaderProfileComponent implements OnInit {
         } else {
           // Если пользователь не найден, также выведите информацию
           this.debugInfo('User not found for login:', this.login);
+          this.authService.logout();
         }
       },
       (error) => {
