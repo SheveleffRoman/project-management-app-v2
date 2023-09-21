@@ -97,11 +97,10 @@ export class FakeAuthService {
   authorize() {
     if (!this.jwtHelperService.isTokenExpired(localStorage.getItem('token'))) {
       this.tokenKey = localStorage.getItem('token') as string;
-      this.username = localStorage.getItem('token') as string;
-      this.router.navigate(['/welcome']);
+      // this.username = localStorage.getItem('token') as string;
     } else {
-      localStorage.removeItem('login');
-      localStorage.removeItem('token');
+      this.router.navigate(['/welcome']);
+      this.logout();
     }
   }
 

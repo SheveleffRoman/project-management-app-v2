@@ -34,27 +34,6 @@ export class LoginComponent implements OnInit {
     this.loginFieldTouched = true;
   }
 
-  // login(username: string, password: string): void {
-  //     // Обработка успешного входа
-  //     if (this.authService.login(username, password)) {
-  //       this.authService.setLoggedInUser(username); // Сохранение имени пользователя
-  //       localStorage.setItem('loggedInUser', JSON.stringify(username));
-  //       this.router.navigate(['projects']);
-  //   } else {
-  //     // Обработка ошибки входа
-  //   }
-  // }
-  
-  // onSubmit() {
-  //   if (this.logInSection.valid) {
-  //     // Handle form submission
-  //     this.login(this.logInSection.controls.login.value!, this.logInSection.controls.password.value!)
-    // } else {
-    //   this.logInSection.markAllAsTouched(); // Mark all fields as touched to show errors
-    // }
-  // }
-
-
   onSubmit() {
     this.isLoading = true; // Показать индикатор загрузки
     this.buttonText = 'Loading...';
@@ -75,7 +54,6 @@ export class LoginComponent implements OnInit {
         this.buttonText = 'Log in';
         this.authService.saveToken(this.logInSection.controls.login.value!, response.token);
         this.authService.setLoggedInUser(this.logInSection.controls.login.value!); // Сохранение имени пользователя
-        localStorage.setItem('loggedInUser', JSON.stringify(this.logInSection.controls.login.value!));
         localStorage.setItem('isAuth', 'true');
         this.router.navigate(['projects']);
         // Дополнительные действия после успешного запроса
