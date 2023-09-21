@@ -35,6 +35,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { ProfileChangeDialogComponent } from './profile-change-dialog/profile-change-dialog.component';
+import { JwtModule } from "@auth0/angular-jwt";
 
 const routes: Routes = [
   {
@@ -98,7 +99,8 @@ const routes: Routes = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    HttpClientModule
+    HttpClientModule,
+    JwtModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
