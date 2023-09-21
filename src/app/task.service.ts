@@ -104,7 +104,7 @@ export class TaskService {
   constructor(public dialog: MatDialog, private router: Router) {}
 
   showConfirmationDialog(title: string, message: string): Observable<boolean> {
-    const confirmDialogData: ConfirmationDialogData = { title, message };
+    const confirmDialogData: ConfirmationDialogData = { title, message, deleteProfile: false };
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '250px',
       data: confirmDialogData,
@@ -143,7 +143,7 @@ export class TaskService {
   }
 
   deleteProject(projectName: string) {
-    this.showConfirmationDialog('', `${projectName} project`).subscribe(
+    this.showConfirmationDialog('Delete file', ` Would you like to delete ${projectName} project`).subscribe(
       (result: boolean) => {
         if (result) {
           // Если пользователь подтвердил удаление
@@ -192,7 +192,7 @@ export class TaskService {
   }
 
   deleteBoard(projectName: string, boardName: string) {
-    this.showConfirmationDialog('', `${boardName} board`).subscribe(
+    this.showConfirmationDialog('Delete file', ` Would you like to delete ${boardName} board`).subscribe(
       (result: boolean) => {
         if (result) {
           // Если пользователь подтвердил удаление
@@ -258,7 +258,7 @@ export class TaskService {
     id: number,
     taskName: string
   ) {
-    this.showConfirmationDialog('', `${taskName} task`).subscribe(
+    this.showConfirmationDialog('Delete file', ` Would you like to delete ${taskName} task`).subscribe(
       (result: boolean) => {
         if (result) {
           // Если пользователь подтвердил удаление
