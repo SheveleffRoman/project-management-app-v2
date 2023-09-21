@@ -32,6 +32,7 @@ export class BoardHeaderProfileComponent implements OnInit {
         if (user) {
           this.userId = user._id;
           this.name = user.name;
+          this.password = user.password; // тут нет пароля, надо его как-то вытащить
 
           // Используйте отладочный метод для вывода информации
           this.debugInfo('User found:', user);
@@ -92,7 +93,7 @@ export class BoardHeaderProfileComponent implements OnInit {
         // this.name = result.name;
         this.login = 'Updating profile...';
 
-        this.authService.putUserById(this.userId!, result).subscribe(
+        this.authService.putUserById(this.userId!, result).subscribe(  // вот тут отправляются все три поля в тч пустой пароль, либо добываем пароль в поле, либо отправляем без него
           (response) => {
             // Обработка успешного ответа от сервера, если это необходимо.
             console.log('Профиль обновлен успешно!', response);
