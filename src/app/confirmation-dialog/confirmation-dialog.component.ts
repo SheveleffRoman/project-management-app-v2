@@ -47,8 +47,8 @@ export class ConfirmationDialogComponent implements OnInit {
 
   customValidator(control: AbstractControl): { [key: string]: any } | null {
     const inputValue = control.value;
-    if (inputValue === this.authService.getLogin()) {
-      return null; // Вернуть null, если значение соответствует getLogin()
+    if (inputValue === this.login) {
+      return null; // Вернуть null, если значение соответствует this.login
     } else {
       return { 'invalidUsername': true }; // Вернуть объект с ошибкой, если значение не соответствует
     }
