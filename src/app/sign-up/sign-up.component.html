@@ -34,6 +34,12 @@
                     <input formControlName="name" id="name" name="name" type="text" autocomplete="" required
                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                 </div>
+                <div class="errorMsg text-red-400"
+                    *ngIf="signUpSection.get('name')!.invalid && (signUpSection.get('name')!.touched || signUpSection.get('name')!.dirty)">
+                    <div *ngIf="signUpSection.get('name')!.hasError('pattern')">Имя должно использовать только
+                        буквы, цифры или дефис.</div>
+                    <div *ngIf="signUpSection.get('name')!.hasError('required')">Поле не может быть пустым.</div>
+                </div>
             </div>
 
             <div>
@@ -41,6 +47,12 @@
                 <div class="mt-2">
                     <input formControlName="login" id="login" name="login" type="text" autocomplete="" required
                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                </div>
+                <div class="errorMsg text-red-400"
+                    *ngIf="signUpSection.get('login')!.invalid && (signUpSection.get('login')!.touched || signUpSection.get('login')!.dirty)">
+                    <div *ngIf="signUpSection.get('login')!.hasError('pattern')">Логин должен иметь только
+                        латинские буквы, цифры и символы.</div>
+                    <div *ngIf="signUpSection.get('login')!.hasError('required')">Поле не может быть пустым.</div>
                 </div>
             </div>
 
@@ -55,6 +67,11 @@
                     <input formControlName="password" id="password" name="password" type="password"
                         autocomplete="current-password" required
                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                </div>
+                <div class="errorMsg text-red-400"
+                    *ngIf="signUpSection.get('password')!.invalid && (signUpSection.get('password')!.touched || signUpSection.get('password')!.dirty)">
+                    <div *ngIf="signUpSection.get('password')!.hasError('pattern')">Только латинские буквы, цифры и символы.</div>
+                    <div *ngIf="signUpSection.get('password')!.hasError('required')">Поле не может быть пустым.</div>
                 </div>
             </div>
 

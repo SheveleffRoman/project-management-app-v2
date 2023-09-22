@@ -11,7 +11,7 @@ import { catchError } from 'rxjs';
 })
 export class LoginComponent implements OnInit {
   logInSection = new FormGroup({
-    login: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9]+$')]),
+    login: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9-<>()#$.?/]+$')]),
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(6),

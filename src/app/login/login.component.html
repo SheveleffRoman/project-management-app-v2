@@ -14,7 +14,8 @@
         </div>
         <div class="errorMsg text-red-400"
           *ngIf="logInSection.get('login')!.invalid && (logInSection.get('login')!.touched || logInSection.get('login')!.dirty)">
-          <div *ngIf="logInSection.get('login')!.hasError('pattern')">Имя должно использовать только латинские буквы.</div>
+          <div *ngIf="logInSection.get('login')!.hasError('pattern')">Логин должен иметь только
+            латинские буквы, цифры и символы.</div>
           <div *ngIf="logInSection.get('login')!.hasError('required')">Поле не может быть пустым.</div>
         </div>
       </div>
