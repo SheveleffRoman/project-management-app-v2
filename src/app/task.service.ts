@@ -1,19 +1,28 @@
-import { Injectable, runInInjectionContext } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
 } from './confirmation-dialog/confirmation-dialog.component';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   TaskChangeDialogComponent,
   taskChangeData,
 } from './task-change-dialog/task-change-dialog.component';
+import { FakeAuthService } from './fake-auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 export interface Projects {
   projectName: string;
   boards: Board[];
+}
+
+export interface ProjectsX {
+  _id?: string;
+  title: string;
+  owner: string;
+  users: string[];
 }
 
 export interface Board {
@@ -31,6 +40,14 @@ export interface Task {
   providedIn: 'root',
 })
 export class TaskService {
+
+  private apiUrl = 'https://sheveleffroman-final-task-backend.onrender.com';
+
+  private tokenKey: string | null = null;
+
+  private dataUpdated = new Subject<void>();
+
+
   projects: Projects[] = [
     {
       projectName: 'Mobile App',
@@ -101,7 +118,7 @@ export class TaskService {
       ],
     },
   ];
-  constructor(public dialog: MatDialog, private router: Router) {}
+  constructor(public dialog: MatDialog, private router: Router, private authService: FakeAuthService, private http: HttpClient ) {}
 
   showConfirmationDialog(title: string, message: string): Observable<boolean> {
     const confirmDialogData: ConfirmationDialogData = { title, message, deleteProfile: false };
@@ -133,14 +150,57 @@ export class TaskService {
     return this.projects;
   }
 
-  addProject(projectName: string) {
-    const newProject: Projects = {
-      projectName: projectName,
-      boards: [],
-    };
+  getProjectsAll(): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
 
-    this.projects.push(newProject);
+    return this.http
+      .get<any>(`${this.apiUrl}/boards`, requestOptions)
   }
+
+  getSetBoards(id: string): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+
+    return this.http
+      .get<any>(`${this.apiUrl}/boardsSet/${id}`, requestOptions)
+  }
+
+  createProject(projectsData: ProjectsX): Observable<any> {
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+
+    return this.http.post<any>(`${this.apiUrl}/boards`, projectsData, requestOptions)
+  }
+
+  // onDataChange() {
+  //   return this.dataUpdated.asObservable();
+  // }
+
+  // // Метод для вызова обновления данных
+  // triggerDataUpdate() {
+  //   this.dataUpdated.next();
+  // }
+
+  // addProject(projectName: string) {
+  //   const newProject: Projects = {
+  //     projectName: projectName,
+  //     boards: [],
+  //   };
+
+  //   this.projects.push(newProject);
+  // }
 
   deleteProject(projectName: string) {
     this.showConfirmationDialog('Delete file', ` Would you like to delete ${projectName} project`).subscribe(
@@ -320,86 +380,3 @@ export class TaskService {
     });
   }
 }
-
-// interface Task {
-//   id: number;
-//   name: string;
-//   description: string;
-// }
-
-// interface Board {
-//   boardName: string;
-//   tasks: Task[];
-// }
-
-// interface Project {
-//   projectName: string;
-//   boards: Board[];
-// }
-
-// const projects = [
-//   {
-//     projectName: 'Project 1',
-//     boards: [
-//       {
-//         boardName: 'To Do',
-//         tasks: [
-//           {
-//             id: 1,
-//             name: 'Brainstorming',
-//             description: 'Brainstorming brings team members diverse experience into play.',
-//           },
-//           {
-//             id: 2,
-//             name: 'Research',
-//             description: 'User research helps you to create an optimal product for users.',
-//           },
-//           {
-//             id: 3,
-//             name: 'Wireframes',
-//             description: 'Low fidelity wireframes include the most basic content and visuals.',
-//           },
-//         ],
-//       },
-//       {
-//         boardName: 'Done',
-//         tasks: [
-//           {
-//             id: 1,
-//             name: 'Columns',
-//             description: 'Brainstorming brings team members diverse experience into play.',
-//           },
-//           {
-//             id: 2,
-//             name: 'Tasks',
-//             description: 'User research helps you to create an optimal product for users.',
-//           },
-//         ],
-//       },
-//     ],
-//   },
-//   // Добавьте другие проекты, если необходимо
-// ];
-
-// addTask(projectName: string, boardName: string, task: TaskObj) {
-//   const project = this.projects.find((p) => p.projectName === projectName);
-
-//   if (project) {
-//     const board = project.boards.find((b) => b.boardName === boardName);
-
-//     if (board) {
-//       // Генерируем уникальный ID для новой задачи (находим максимальный ID и добавляем 1)
-//       const newId = Math.max(...board.tasks.map((t) => t.id), 0) + 1;
-
-//       // Создаем новую задачу с указанными данными
-//       const newTask = {
-//         id: newId,
-//         name: task.name,
-//         description: task.description,
-//       };
-
-//       // Добавляем новую задачу в массив задач доски
-//       board.tasks.push(newTask);
-//     }
-//   }
-// }
