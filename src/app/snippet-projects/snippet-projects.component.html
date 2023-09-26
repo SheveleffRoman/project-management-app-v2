@@ -1,6 +1,6 @@
 <div class="main_wrapper">
     <ul>
-        <a class="snippet" [routerLink]="snippet.projectName" *ngFor="let snippet of snippets"><li>{{snippet.projectName}}</li></a>
+        <a class="snippet" [routerLink]="snippet.title" *ngFor="let snippet of snippets"><li>{{snippet.title}}</li></a>
         <a (click)="openAddProjectForm()" class="snippet">+</a>
     </ul>
 </div>

@@ -23,6 +23,7 @@ export class BoardHeaderProfileComponent implements OnInit {
   ngOnInit(): void {
     this.getLogin();
     this.findUser();
+    // console.log(this.userId)
   }
 
   findUser(): void {

@@ -1,23 +1,59 @@
 import { Component, OnInit } from '@angular/core';
-import { Projects, TaskService } from '../task.service';
+import { Projects, ProjectsX, TaskService } from '../task.service';
+import { FakeAuthService } from '../fake-auth.service';
 
 @Component({
   selector: 'app-board-side-menu',
   templateUrl: './board-side-menu.component.html',
-  styleUrls: ['./board-side-menu.component.scss']
+  styleUrls: ['./board-side-menu.component.scss'],
 })
 export class BoardSideMenuComponent implements OnInit {
+  constructor(
+    private taskService: TaskService,
+    private authService: FakeAuthService
+  ) {}
 
-  constructor(private taskSevice: TaskService) {}
-
-  projects!: Projects[];
+  projects: ProjectsX[] = [];
   projectName!: string;
+  userId: string = '';
+  login: string | null = '';
 
   ngOnInit(): void {
-      this.getProjects();
+    this.getProjects();
+    console.log(this.projects);
   }
 
   getProjects() {
-    this.projects = this.taskSevice.getProjects();
+    this.login = this.authService.getLogin();
+
+    this.authService.getUserAll().subscribe(
+      (users) => {
+        const user = users.find((user: any) => this.login === user.login);
+        if (user) {
+          this.userId = user._id;
+          // Используйте отладочный метод для вывода информации
+          this.taskService.getSetBoards(this.userId).subscribe((set) => {
+            // this.snippets = [];
+            set.forEach((projectData: any) => {
+              const project: ProjectsX = {
+                _id: projectData._id,
+                title: projectData.title,
+                owner: '',
+                users: [],
+              };
+
+              this.projects.push(project);
+            });
+          });
+        }
+      },
+      (error) => {
+        // Обработка ошибок и вывод информации
+        this.debugInfo('Error occurred:', error);
+      }
+    );
+  }
+  debugInfo(message: string, data: any): void {
+    console.log(message, data);
   }
 }

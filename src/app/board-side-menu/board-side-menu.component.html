@@ -21,7 +21,7 @@
         <div class="project_lists">
             <ul *ngFor="let project of projects">
                 <li class="">
-                    <p><a [routerLink]="['/projects', project.projectName]">{{project.projectName}}</a></p>
+                    <p><a [routerLink]="['/projects', project.title]">{{project.title}}</a></p>
                 </li>
                 <!-- <li>
                     <p>Website Redesign</p>
