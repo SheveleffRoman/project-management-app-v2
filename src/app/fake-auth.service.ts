@@ -130,7 +130,7 @@ export class FakeAuthService {
       .get<any>(`${this.apiUrl}/users/${id}`, requestOptions)
   }
 
-  putUserById(uderId: string, userData: profileData): Observable<any> {
+  putUserById(userId: string, userData: profileData): Observable<any> {
     this.authorize();
     const headers = new HttpHeaders({
       accept: 'application/json',
@@ -140,7 +140,7 @@ export class FakeAuthService {
     const requestOptions = { headers: headers };
 
     return this.http
-      .put<any>(`${this.apiUrl}/users/${uderId}`, userData, requestOptions)
+      .put<any>(`${this.apiUrl}/users/${userId}`, userData, requestOptions)
   }
 
   deleteUserById(userId: string): Observable<any> {
