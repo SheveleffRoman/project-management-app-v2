@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Projects, ProjectsX, TaskService } from '../task.service';
 import { FakeAuthService } from '../fake-auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board-side-menu',
   templateUrl: './board-side-menu.component.html',
   styleUrls: ['./board-side-menu.component.scss'],
 })
-export class BoardSideMenuComponent implements OnInit {
+export class BoardSideMenuComponent implements OnInit, OnDestroy {
   constructor(
     private taskService: TaskService,
     private authService: FakeAuthService
@@ -17,10 +18,22 @@ export class BoardSideMenuComponent implements OnInit {
   projectName!: string;
   userId: string = '';
   login: string | null = '';
+  projectsUpdatedSubscription: Subscription = Subscription.EMPTY;
+
 
   ngOnInit(): void {
     this.getProjects();
     console.log(this.projects);
+    this.projectsUpdatedSubscription = this.taskService.getProjectsUpdated().subscribe(() => {
+      // Здесь можно выполнить запрос на получение всех проектов заново
+      this.projects = [];
+      this.getProjects();
+    });
+  }
+
+  ngOnDestroy() {
+    // Не забудьте отписаться от подписки при уничтожении компонента
+    this.projectsUpdatedSubscription.unsubscribe();
   }
 
   getProjects() {

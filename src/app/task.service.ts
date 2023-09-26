@@ -40,13 +40,11 @@ export interface Task {
   providedIn: 'root',
 })
 export class TaskService {
-
   private apiUrl = 'https://sheveleffroman-final-task-backend.onrender.com';
 
   private tokenKey: string | null = null;
 
-  private dataUpdated = new Subject<void>();
-
+  private projectAdded$ = new Subject<void>();
 
   projects: Projects[] = [
     {
@@ -118,10 +116,19 @@ export class TaskService {
       ],
     },
   ];
-  constructor(public dialog: MatDialog, private router: Router, private authService: FakeAuthService, private http: HttpClient ) {}
+  constructor(
+    public dialog: MatDialog,
+    private router: Router,
+    private authService: FakeAuthService,
+    private http: HttpClient
+  ) {}
 
   showConfirmationDialog(title: string, message: string): Observable<boolean> {
-    const confirmDialogData: ConfirmationDialogData = { title, message, deleteProfile: false };
+    const confirmDialogData: ConfirmationDialogData = {
+      title,
+      message,
+      deleteProfile: false,
+    };
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '250px',
       data: confirmDialogData,
@@ -158,8 +165,7 @@ export class TaskService {
     });
     const requestOptions = { headers: headers };
 
-    return this.http
-      .get<any>(`${this.apiUrl}/boards`, requestOptions)
+    return this.http.get<any>(`${this.apiUrl}/boards`, requestOptions);
   }
 
   getSetBoards(id: string): Observable<any> {
@@ -170,8 +176,7 @@ export class TaskService {
     });
     const requestOptions = { headers: headers };
 
-    return this.http
-      .get<any>(`${this.apiUrl}/boardsSet/${id}`, requestOptions)
+    return this.http.get<any>(`${this.apiUrl}/boardsSet/${id}`, requestOptions);
   }
 
   createProject(projectsData: ProjectsX): Observable<any> {
@@ -181,7 +186,18 @@ export class TaskService {
     });
     const requestOptions = { headers: headers };
 
-    return this.http.post<any>(`${this.apiUrl}/boards`, projectsData, requestOptions)
+    return this.http
+      .post<any>(`${this.apiUrl}/boards`, projectsData, requestOptions)
+      .pipe(
+        // После успешного добавления проекта отправляем сигнал
+        tap(() => {
+          this.projectAdded$.next();
+        })
+      );
+  }
+
+  getProjectsUpdated(): Observable<void> {
+    return this.projectAdded$.asObservable();
   }
 
   // onDataChange() {
@@ -203,20 +219,21 @@ export class TaskService {
   // }
 
   deleteProject(projectName: string) {
-    this.showConfirmationDialog('Delete file', ` Would you like to delete ${projectName} project`).subscribe(
-      (result: boolean) => {
-        if (result) {
-          // Если пользователь подтвердил удаление
-          const projectIndex = this.projects.findIndex(
-            (p) => p.projectName === projectName
-          );
-          if (projectIndex !== -1) {
-            this.projects.splice(projectIndex, 1);
-          }
-          this.router.navigate(['/projects']);
+    this.showConfirmationDialog(
+      'Delete file',
+      ` Would you like to delete ${projectName} project`
+    ).subscribe((result: boolean) => {
+      if (result) {
+        // Если пользователь подтвердил удаление
+        const projectIndex = this.projects.findIndex(
+          (p) => p.projectName === projectName
+        );
+        if (projectIndex !== -1) {
+          this.projects.splice(projectIndex, 1);
         }
+        this.router.navigate(['/projects']);
       }
-    );
+    });
   }
 
   updateProjectName(projectName: string, newName: string) {
@@ -252,27 +269,28 @@ export class TaskService {
   }
 
   deleteBoard(projectName: string, boardName: string) {
-    this.showConfirmationDialog('Delete file', ` Would you like to delete ${boardName} board`).subscribe(
-      (result: boolean) => {
-        if (result) {
-          // Если пользователь подтвердил удаление
-          const projectIndex = this.projects.findIndex(
-            (p) => p.projectName === projectName
+    this.showConfirmationDialog(
+      'Delete file',
+      ` Would you like to delete ${boardName} board`
+    ).subscribe((result: boolean) => {
+      if (result) {
+        // Если пользователь подтвердил удаление
+        const projectIndex = this.projects.findIndex(
+          (p) => p.projectName === projectName
+        );
+
+        if (projectIndex !== -1) {
+          const project = this.projects[projectIndex];
+          const boardIndex = project.boards.findIndex(
+            (b) => b.boardName === boardName
           );
 
-          if (projectIndex !== -1) {
-            const project = this.projects[projectIndex];
-            const boardIndex = project.boards.findIndex(
-              (b) => b.boardName === boardName
-            );
-
-            if (boardIndex !== -1) {
-              project.boards.splice(boardIndex, 1);
-            }
+          if (boardIndex !== -1) {
+            project.boards.splice(boardIndex, 1);
           }
         }
       }
-    );
+    });
   }
 
   updateBoardName(projectName: string, boardName: string, newName: string) {
@@ -318,28 +336,29 @@ export class TaskService {
     id: number,
     taskName: string
   ) {
-    this.showConfirmationDialog('Delete file', ` Would you like to delete ${taskName} task`).subscribe(
-      (result: boolean) => {
-        if (result) {
-          // Если пользователь подтвердил удаление
-          const project = this.projects.find(
-            (p) => p.projectName === projectName
-          );
+    this.showConfirmationDialog(
+      'Delete file',
+      ` Would you like to delete ${taskName} task`
+    ).subscribe((result: boolean) => {
+      if (result) {
+        // Если пользователь подтвердил удаление
+        const project = this.projects.find(
+          (p) => p.projectName === projectName
+        );
 
-          if (project) {
-            const board = project.boards.find((b) => b.boardName === boardName);
+        if (project) {
+          const board = project.boards.find((b) => b.boardName === boardName);
 
-            if (board) {
-              const taskIndex = board.tasks.findIndex((t) => t.id === id);
+          if (board) {
+            const taskIndex = board.tasks.findIndex((t) => t.id === id);
 
-              if (taskIndex !== -1) {
-                board.tasks.splice(taskIndex, 1);
-              }
+            if (taskIndex !== -1) {
+              board.tasks.splice(taskIndex, 1);
             }
           }
         }
       }
-    );
+    });
   }
 
   updateTask(
