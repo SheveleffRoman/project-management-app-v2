@@ -47,13 +47,9 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
     this.login = this.authService.getLogin();
 
-    this.authService.getUserAll().subscribe((users) => {
-      const user = users.find((user: any) => this.login === user.login);
-      if (user) {
-        this.userId = user._id;
-        console.log(`User Id: ${this.userId}`);
-      }
-    });
+    this.findUserId();
+    this.findProjectId();
+
     this.prevProjectName = this.projectName;
     console.log(this.projectName);
   }
@@ -63,10 +59,33 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     if (this.projectName !== this.prevProjectName) {
       // Если значение изменилось, выполните здесь необходимые действия
       console.log('projectName изменилось:', this.projectName);
+      this.findProjectId();
       this.getBoards(this.projectName);
       // Выполните здесь другие действия, которые вы хотите выполнить при изменении projectName
       this.prevProjectName = this.projectName; // Обновляем prevProjectName
     }
+  }
+
+  findProjectId() {
+    this.taskService.getProjectsAll().subscribe((projects) => {
+      // console.log(projects);
+      const project = projects.find(
+        (project: any) => this.projectName === project.title
+      );
+      console.log(project);
+      this.projectId = project._id;
+      console.log(`Project Id:${this.projectId}`);
+    });
+  }
+
+  findUserId() {
+    this.authService.getUserAll().subscribe((users) => {
+      const user = users.find((user: any) => this.login === user.login);
+      if (user) {
+        this.userId = user._id;
+        console.log(`User Id: ${this.userId}`);
+      }
+    });
   }
 
   getBoards(projectName: string) {
@@ -99,15 +118,15 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     this.newProjectName = this.projectName;
     this.isHidden = true;
 
-    this.taskService.getProjectsAll().subscribe((projects) => {
-      console.log(projects);
-      const project = projects.find(
-        (project: any) => this.projectName === project.title
-      );
-      console.log(project);
-      this.projectId = project._id;
-      console.log(this.projectId);
-    });
+    // this.taskService.getProjectsAll().subscribe((projects) => {
+    //   console.log(projects);
+    //   const project = projects.find(
+    //     (project: any) => this.projectName === project.title
+    //   );
+    //   console.log(project);
+    //   this.projectId = project._id;
+    //   console.log(this.projectId);
+    // });
   }
 
   abortRenameProject() {
@@ -152,7 +171,7 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   }
 
   deleteProject(projectName: string) {
-    this.taskService.deleteProject(this.projectId ,projectName).subscribe();
+    this.taskService.deleteProject(this.projectId, projectName).subscribe();
     // this.router.navigate(['/projects']);
   }
 }
