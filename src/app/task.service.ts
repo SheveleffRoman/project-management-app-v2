@@ -4,7 +4,7 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
 } from './confirmation-dialog/confirmation-dialog.component';
-import { Observable, Subject, tap } from 'rxjs';
+import { Observable, Subject, of, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   TaskChangeDialogComponent,
@@ -203,47 +203,43 @@ export class TaskService {
       Authorization: `Bearer ${this.tokenKey}`,
     });
     const requestOptions = { headers: headers };
-    return this.http.put<any>(`${this.apiUrl}/boards/${id}`, projectData, requestOptions);
+    return this.http.put<any>(
+      `${this.apiUrl}/boards/${id}`,
+      projectData,
+      requestOptions
+    );
   }
 
   getProjectsUpdated(): Observable<void> {
     return this.projectAdded$.asObservable();
   }
 
-  // onDataChange() {
-  //   return this.dataUpdated.asObservable();
-  // }
-
-  // // Метод для вызова обновления данных
-  // triggerDataUpdate() {
-  //   this.dataUpdated.next();
-  // }
-
-  // addProject(projectName: string) {
-  //   const newProject: Projects = {
-  //     projectName: projectName,
-  //     boards: [],
-  //   };
-
-  //   this.projects.push(newProject);
-  // }
-
-  deleteProject(projectName: string) {
-    this.showConfirmationDialog(
+  deleteProject(id: string, projectName: string): Observable<any> {
+    return this.showConfirmationDialog(
       'Delete file',
-      ` Would you like to delete ${projectName} project`
-    ).subscribe((result: boolean) => {
-      if (result) {
-        // Если пользователь подтвердил удаление
-        const projectIndex = this.projects.findIndex(
-          (p) => p.projectName === projectName
-        );
-        if (projectIndex !== -1) {
-          this.projects.splice(projectIndex, 1);
+      `Would you like to delete ${projectName} project`
+    ).pipe(
+      switchMap((result: boolean) => {
+        if (result) {
+          this.tokenKey = this.authService.getToken();
+          const headers = new HttpHeaders({
+            accept: 'application/json',
+            Authorization: `Bearer ${this.tokenKey}`,
+          });
+          const requestOptions = { headers: headers };
+          return this.http
+            .delete<any>(`${this.apiUrl}/boards/${id}`, requestOptions)
+            .pipe(
+              tap(() => {
+                this.router.navigate(['/projects']), this.projectAdded$.next();
+              })
+            );
+        } else {
+          // Return some default value or handle the case where the user didn't confirm deletion.
+          return of(null);
         }
-        this.router.navigate(['/projects']);
-      }
-    });
+      })
+    );
   }
 
   getBoards(projectName: string): Board[] {
