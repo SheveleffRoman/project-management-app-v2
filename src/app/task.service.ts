@@ -30,11 +30,31 @@ export interface Board {
   tasks: { id: number; name: string; description: string }[];
 }
 
+export interface BoardX {
+  _id?: string;
+  title: string;
+  order: number;
+  Project?: string;
+}
+
 export interface Task {
   id: number;
   name: string;
   description: string;
 }
+
+export interface TaskX {
+  _id: string;
+  title: string;
+  order: number;
+  ProjectId: string;
+  BoardId: string;
+  description: string;
+  userId: number;
+  users: string[];
+}
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -153,6 +173,8 @@ export class TaskService {
     return dialogRef.afterClosed();
   }
 
+  //////////////////////////////////PROJECTS//////////////////////////////////
+
   getProjects(): Projects[] {
     return this.projects;
   }
@@ -241,6 +263,8 @@ export class TaskService {
       })
     );
   }
+
+//////////////////////////////////BOARDS//////////////////////////////////
 
   getBoards(projectName: string): Board[] {
     const project = this.projects.find((p) => p.projectName === projectName);
