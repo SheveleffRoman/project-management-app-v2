@@ -73,7 +73,9 @@
     </div>
   </div>
   <div class="boards_wrapper" cdkDropList cdkDropListGroup (cdkDropListDropped)="dropCol($event)">
-    <app-board-column *ngFor="let board of boards" [board]="board" [projectName]="projectName" [boardName]='board.boardName' cdkDropList [cdkDropListData]="board" (cdkDropListDropped)="dropTasks($event)" cdkDrag></app-board-column>
+    <app-board-column *ngFor="let board of boards" [board]="board" [boards]="boards" [boardId]="board._id!" [projectId]="projectId" [projectName]="projectName" [boardName]='board.title' cdkDropList [cdkDropListData]="board" cdkDrag (boardDeleted)="onBoardDeleted($event)"></app-board-column>
+     <!-- нижняя с дропом таск -->
+    <!-- <app-board-column *ngFor="let board of boards" [board]="board" [projectName]="projectName" [boardName]='board.title' cdkDropList [cdkDropListData]="board" (cdkDropListDropped)="dropTasks($event)" cdkDrag></app-board-column> -->
   </div>
 </div>
 <div *ngIf="showForm" class="center-form">

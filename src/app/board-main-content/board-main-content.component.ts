@@ -1,5 +1,12 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
-import { Board, Projects, ProjectsX, Task, TaskService } from '../task.service';
+import {
+  Board,
+  BoardX,
+  Projects,
+  ProjectsX,
+  Task,
+  TaskService,
+} from '../task.service';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -17,13 +24,14 @@ import { FakeAuthService } from '../fake-auth.service';
   styleUrls: ['./board-main-content.component.scss'],
 })
 export class BoardMainContentComponent implements OnInit, DoCheck {
-  boards!: Board[];
 
   projectName: string = '';
 
   login: string | null = '';
   userId: string = '';
   projectId: string = '';
+
+  boards: BoardX[] = [];
 
   newProjectName: string = '';
   prevProjectName: string = '';
@@ -43,15 +51,15 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.projectName = decodeURIComponent(params['projectName']);
+      this.findBoardsByProject(); // Перенесено сюда, чтобы projectId был установлен перед getBoards
     });
-
+  
     this.login = this.authService.getLogin();
-
     this.findUserId();
-    this.findProjectId();
 
+  
     this.prevProjectName = this.projectName;
-    console.log(this.projectName);
+    console.log(`Project name: ${this.projectName}`);
   }
 
   ngDoCheck(): void {
@@ -59,22 +67,23 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     if (this.projectName !== this.prevProjectName) {
       // Если значение изменилось, выполните здесь необходимые действия
       console.log('projectName изменилось:', this.projectName);
-      this.findProjectId();
-      this.getBoards(this.projectName);
-      // Выполните здесь другие действия, которые вы хотите выполнить при изменении projectName
+      this.boards = [];
+      // this.findBoardsByProject();
+      // this.getBoards(this.projectId);
+      // другие действия, которые можно выполнить при изменении projectName
       this.prevProjectName = this.projectName; // Обновляем prevProjectName
     }
   }
 
-  findProjectId() {
+  findBoardsByProject() {
     this.taskService.getProjectsAll().subscribe((projects) => {
-      // console.log(projects);
-      const project = projects.find(
-        (project: any) => this.projectName === project.title
-      );
+      const project = projects.find((project: any) => this.projectName === project.title);
       console.log(project);
       this.projectId = project._id;
       console.log(`Project Id:${this.projectId}`);
+  
+      // Теперь, когда projectId установлен, можно вызвать getBoards(this.projectId)
+      this.getBoards(this.projectId);
     });
   }
 
@@ -88,30 +97,26 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     });
   }
 
-  getBoards(projectName: string) {
-    this.boards = this.taskService.getBoards(projectName);
-  }
-
-  dropCol(event: CdkDragDrop<Board>) {
+  dropCol(event: CdkDragDrop<BoardX>) {
     moveItemInArray(this.boards, event.previousIndex, event.currentIndex);
   }
 
-  dropTasks(event: CdkDragDrop<Board>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data.tasks,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
-      transferArrayItem(
-        event.previousContainer.data.tasks,
-        event.container.data.tasks,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
-  }
+  // dropTasks(event: CdkDragDrop<BoardX>) {
+  //   if (event.previousContainer === event.container) {
+  //     moveItemInArray(
+  //       event.container.data.tasks,
+  //       event.previousIndex,
+  //       event.currentIndex
+  //     );
+  //   } else {
+  //     transferArrayItem(
+  //       event.previousContainer.data.tasks,
+  //       event.container.data.tasks,
+  //       event.previousIndex,
+  //       event.currentIndex
+  //     );
+  //   }
+  // }
 
   showProjectRenameForm() {
     this.showRenameProjectForm = true;
@@ -155,9 +160,27 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     this.isHidden = false;
   }
 
+  getBoards(id: string) {
+    this.taskService.getBoardsByProject(id).subscribe((columns) => {
+      this.boards = columns;
+      console.log(columns)
+    });
+  }
+
   addBoard() {
-    this.taskService.addBoard(this.projectName, this.newBoardName);
+    const board: BoardX = {
+      title: this.newBoardName,
+      order: this.boards.length,  //переделать для корректной перезаписи порядка после удаления 
+    };
+    this.taskService.addBoard(this.projectId, board).subscribe(() =>
+      this.findBoardsByProject()
+    );
     this.showForm = false;
+  }
+
+  onBoardDeleted(boardId: string) {
+    // Обновите данные в родительском компоненте
+    this.boards = this.boards.filter(board => board._id !== boardId);
   }
 
   showAddForm() {
@@ -172,6 +195,5 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
   deleteProject(projectName: string) {
     this.taskService.deleteProject(this.projectId, projectName).subscribe();
-    // this.router.navigate(['/projects']);
   }
 }
