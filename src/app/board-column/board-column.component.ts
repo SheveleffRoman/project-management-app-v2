@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
-import { Board, Projects, Task, TaskService } from '../task.service';
+import { Board, BoardX, Projects, Task, TaskService } from '../task.service';
 
 @Component({
   selector: 'app-board-column',
@@ -13,9 +13,15 @@ export class BoardColumnComponent {
   newTaskDescription: string = '';
   showForm: boolean = false;
 
-  @Input() board!: Board;
+  @Input() board!: BoardX;
+  @Input() boards: BoardX[] = [];
   @Input() boardName = '';
   @Input() projectName: string = '';
+  @Input() projectId: string = '';
+  @Input() boardId: string = '';
+
+  @Output() boardDeleted = new EventEmitter<string>(); // Определение события
+
 
   // tasks!: Task[];
 
@@ -78,18 +84,46 @@ export class BoardColumnComponent {
     this.newBoardName = '';
   }
 
-  renameBoard(boardName: string) {
-    if(this.newBoardName) {
-      this.taskService.updateBoardName(this.projectName, boardName, this.newBoardName);
-      this.newBoardName = '';
-      this.isHidden = false;
-      console.log(this.board)
+  renameBoard() {
+    if (this.newBoardName) {
+      const columnData: BoardX = {
+        title: this.newBoardName,
+        order: this.boards.length,
+      };
+  
+      this.taskService.updateBoardName(this.projectId, this.boardId, columnData)
+        .subscribe({
+          next: (response) => {
+            // Обработка успешного ответа от сервера
+            console.log('Доска успешно переименована', response);
+            this.board.title = this.newBoardName;
+            this.newBoardName = ''; // Сброс поля ввода
+            this.isHidden = false;
+            console.log(this.board);
+          },
+          error: (error) => {
+            // Обработка ошибки
+            console.error('Ошибка при переименовании доски', error);
+          }
+        });
     }
   }
+  
+  
 
-  deleteBoard(projectName: string, boardName: string) {
-    this.taskService.deleteBoard(projectName, boardName)
+  deleteBoard(boardName: string) {
+    this.taskService.deleteBoard(this.projectId, this.board._id!, boardName).subscribe(() => {
+      // Удалите доску из массива boards
+      this.boards = this.boards.filter(board => board._id !== this.board._id);
+      console.log(this.boards);
+  
+      // Генерируем событие для оповещения родительского компонента и прокидываем id доски
+      this.boardDeleted.emit(this.board._id);
+    });
   }
+  
+  
+  
 
   private generateNewId(): number {
     // Генерирует новый уникальный ID
