@@ -54,8 +54,6 @@ export interface TaskX {
   users: string[];
 }
 
-
-
 @Injectable({
   providedIn: 'root',
 })
@@ -264,68 +262,89 @@ export class TaskService {
     );
   }
 
-//////////////////////////////////BOARDS//////////////////////////////////
+  //////////////////////////////////BOARDS//////////////////////////////////
 
-  getBoards(projectName: string): Board[] {
-    const project = this.projects.find((p) => p.projectName === projectName);
-    return project ? project.boards : [];
+  addBoard(boardId: string, column: BoardX): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+
+    return this.http.post<any>(
+      `${this.apiUrl}/boards/${boardId}/columns`,
+      column,
+      requestOptions
+    );
   }
 
-  addBoard(projectName: string, newBoardName: string) {
-    const project = this.projects.find((p) => p.projectName === projectName);
+  getBoardsByProject(id: string): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
 
-    if (project) {
-      const existingBoard = project.boards.find(
-        (b) => b.boardName === newBoardName
-      );
-
-      if (!existingBoard) {
-        const newBoard: Board = {
-          boardName: newBoardName,
-          tasks: [],
-        };
-
-        project.boards.push(newBoard);
-      }
-    }
+    return this.http.get<any>(
+      `${this.apiUrl}/boards/${id}/columns`,
+      requestOptions
+    );
   }
 
-  deleteBoard(projectName: string, boardName: string) {
-    this.showConfirmationDialog(
+  deleteBoard(
+    projectId: string,
+    boardId: string,
+    boardName: string
+  ): Observable<any> {
+    return this.showConfirmationDialog(
       'Delete file',
       ` Would you like to delete ${boardName} board`
-    ).subscribe((result: boolean) => {
-      if (result) {
-        // Если пользователь подтвердил удаление
-        const projectIndex = this.projects.findIndex(
-          (p) => p.projectName === projectName
-        );
-
-        if (projectIndex !== -1) {
-          const project = this.projects[projectIndex];
-          const boardIndex = project.boards.findIndex(
-            (b) => b.boardName === boardName
-          );
-
-          if (boardIndex !== -1) {
-            project.boards.splice(boardIndex, 1);
-          }
+    ).pipe(
+      switchMap((result: boolean) => {
+        if (result) {
+          this.tokenKey = this.authService.getToken();
+          const headers = new HttpHeaders({
+            accept: 'application/json',
+            Authorization: `Bearer ${this.tokenKey}`,
+          });
+          const requestOptions = { headers: headers };
+          return this.http
+            .delete<any>(
+              `${this.apiUrl}/boards/${projectId}/columns/${boardId}`,
+              requestOptions
+            )
+            .pipe(
+              tap(() => {
+                //  this.projectAdded$.next();
+                console.log('Delete complete');
+              })
+            );
+        } else {
+          // Return some default value or handle the case where the user didn't confirm deletion.
+          return of(null);
         }
-      }
+      })
+    );
+  }
+
+  updateBoardName(projectId: string, boardId: string, columnData: BoardX): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
     });
+    const requestOptions = { headers: headers };
+
+    return this.http.put<any>(
+      `${this.apiUrl}/boards/${projectId}/columns/${boardId}`,
+      columnData,
+      requestOptions
+    );
   }
 
-  updateBoardName(projectName: string, boardName: string, newName: string) {
-    const project = this.projects.find((p) => p.projectName === projectName);
-
-    if (project) {
-      const board = project.boards.find((b) => b.boardName === boardName);
-
-      if (board) {
-        board.boardName = newName;
-      }
-    }
-  }
+  //////////////////////////////////TASKS//////////////////////////////////
 
   getTasks(boardName: string): Task[] {
     const board = this.projects
