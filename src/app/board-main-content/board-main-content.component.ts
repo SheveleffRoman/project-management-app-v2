@@ -51,7 +51,7 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
       const user = users.find((user: any) => this.login === user.login);
       if (user) {
         this.userId = user._id;
-        console.log(this.userId);
+        console.log(`User Id: ${this.userId}`);
       }
     });
     this.prevProjectName = this.projectName;
@@ -120,10 +120,7 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   }
 
   renameProject() {
-    //переделать!!!!
-    // if (this.newProjectName) {
     const title = this.newProjectName;
-    //   console.log(title)
 
     const projectData: ProjectsX = {
       title: title,
@@ -137,27 +134,6 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     this.projectName = this.newProjectName;
     this.newProjectName = '';
     this.isHidden = false;
-    // console.log(this.projectName);
-
-    //   this.authService.getUserAll().subscribe((users) => {
-    //     const user = users.find((user: any) => this.login === user.login);
-    //     if (user) {
-    //       this.userId = user._id;
-    //     }
-    //   });
-
-    //   const projectData: ProjectsX = {
-    //     title: title,
-    //     owner: this.userId,
-    //     users: [''],
-    //   };
-
-    //   this.taskService.updateProjectName(this.projectId, projectData);
-    //   this.projectName = this.newProjectName;
-    //   this.newProjectName = '';
-    //   this.isHidden = false;
-    //   // console.log(this.projectName);
-    // }
   }
 
   addBoard() {
