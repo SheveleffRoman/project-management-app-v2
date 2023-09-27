@@ -23,7 +23,7 @@ export class BoardSideMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getProjects();
-    console.log(this.projects);
+    // console.log(this.projects);
     this.projectsUpdatedSubscription = this.taskService.getProjectsUpdated().subscribe(() => {
       // Здесь можно выполнить запрос на получение всех проектов заново
       this.projects = [];
@@ -45,7 +45,7 @@ export class BoardSideMenuComponent implements OnInit, OnDestroy {
         if (user) {
           this.userId = user._id;
           // Используйте отладочный метод для вывода информации
-          this.taskService.getSetBoards(this.userId).subscribe((set) => {
+          this.taskService.getSetProjects(this.userId).subscribe((set) => {
             // this.snippets = [];
             set.forEach((projectData: any) => {
               const project: ProjectsX = {
@@ -67,6 +67,6 @@ export class BoardSideMenuComponent implements OnInit, OnDestroy {
     );
   }
   debugInfo(message: string, data: any): void {
-    console.log(message, data);
+    // console.log(message, data);
   }
 }

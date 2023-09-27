@@ -46,7 +46,7 @@ export class SnippetProjectsComponent implements OnInit {
           this.userId = user._id;
           // Используйте отладочный метод для вывода информации
           this.debugInfo('User found:', user);
-          this.taskService.getSetBoards(this.userId).subscribe((set) => {
+          this.taskService.getSetProjects(this.userId).subscribe((set) => {
             // this.snippets = [];
             set.forEach((projectData: any) => {
               const project: ProjectsX = {
@@ -69,7 +69,7 @@ export class SnippetProjectsComponent implements OnInit {
   }
 
   debugInfo(message: string, data: any): void {
-    console.log(message, data);
+    // console.log(message, data);
   }
 
   // addProject() {

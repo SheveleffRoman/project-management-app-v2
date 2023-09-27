@@ -51,7 +51,7 @@ export class BoardHeaderProfileComponent implements OnInit {
   }
 
   debugInfo(message: string, data: any): void {
-    console.log(message, data);
+    // console.log(message, data);
   }
 
   // findName(): void {
