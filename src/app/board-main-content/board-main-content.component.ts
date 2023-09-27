@@ -1,5 +1,5 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
-import { Board, Projects, Task, TaskService } from '../task.service';
+import { Board, Projects, ProjectsX, Task, TaskService } from '../task.service';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -9,6 +9,7 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FakeAuthService } from '../fake-auth.service';
 
 @Component({
   selector: 'app-board-main-content',
@@ -19,6 +20,10 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   boards!: Board[];
 
   projectName: string = '';
+
+  login: string | null = '';
+  userId: string = '';
+  projectId: string = '';
 
   newProjectName: string = '';
   prevProjectName: string = '';
@@ -31,7 +36,8 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   constructor(
     private taskService: TaskService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: FakeAuthService
   ) {}
 
   ngOnInit(): void {
@@ -39,9 +45,17 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
       this.projectName = decodeURIComponent(params['projectName']);
     });
 
-    this.prevProjectName = this.projectName; 
-    this.getBoards(this.projectName);
-    console.log(this.boards);
+    this.login = this.authService.getLogin();
+
+    this.authService.getUserAll().subscribe((users) => {
+      const user = users.find((user: any) => this.login === user.login);
+      if (user) {
+        this.userId = user._id;
+        console.log(this.userId);
+      }
+    });
+    this.prevProjectName = this.projectName;
+    console.log(this.projectName);
   }
 
   ngDoCheck(): void {
@@ -49,7 +63,7 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     if (this.projectName !== this.prevProjectName) {
       // Если значение изменилось, выполните здесь необходимые действия
       console.log('projectName изменилось:', this.projectName);
-      this.getBoards(this.projectName)
+      this.getBoards(this.projectName);
       // Выполните здесь другие действия, которые вы хотите выполнить при изменении projectName
       this.prevProjectName = this.projectName; // Обновляем prevProjectName
     }
@@ -84,6 +98,16 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     this.showRenameProjectForm = true;
     this.newProjectName = this.projectName;
     this.isHidden = true;
+
+    this.taskService.getProjectsAll().subscribe((projects) => {
+      console.log(projects);
+      const project = projects.find(
+        (project: any) => this.projectName === project.title
+      );
+      console.log(project);
+      this.projectId = project._id;
+      console.log(this.projectId);
+    });
   }
 
   abortRenameProject() {
@@ -96,13 +120,44 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   }
 
   renameProject() {
-    if (this.newProjectName) {
-      this.taskService.updateProjectName(this.projectName, this.newProjectName);
-      this.projectName = this.newProjectName;
-      this.newProjectName = '';
-      this.isHidden = false;
-      // console.log(this.projectName);
-    }
+    //переделать!!!!
+    // if (this.newProjectName) {
+    const title = this.newProjectName;
+    //   console.log(title)
+
+    const projectData: ProjectsX = {
+      title: title,
+      owner: this.userId,
+      users: [''],
+    };
+
+    this.taskService
+      .updateProjectName(this.projectId, projectData)
+      .subscribe((response) => console.log(response));
+    this.projectName = this.newProjectName;
+    this.newProjectName = '';
+    this.isHidden = false;
+    // console.log(this.projectName);
+
+    //   this.authService.getUserAll().subscribe((users) => {
+    //     const user = users.find((user: any) => this.login === user.login);
+    //     if (user) {
+    //       this.userId = user._id;
+    //     }
+    //   });
+
+    //   const projectData: ProjectsX = {
+    //     title: title,
+    //     owner: this.userId,
+    //     users: [''],
+    //   };
+
+    //   this.taskService.updateProjectName(this.projectId, projectData);
+    //   this.projectName = this.newProjectName;
+    //   this.newProjectName = '';
+    //   this.isHidden = false;
+    //   // console.log(this.projectName);
+    // }
   }
 
   addBoard() {

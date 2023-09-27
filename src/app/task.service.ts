@@ -168,7 +168,7 @@ export class TaskService {
     return this.http.get<any>(`${this.apiUrl}/boards`, requestOptions);
   }
 
-  getSetBoards(id: string): Observable<any> {
+  getSetProjects(id: string): Observable<any> {
     this.tokenKey = this.authService.getToken();
     const headers = new HttpHeaders({
       accept: 'application/json',
@@ -194,6 +194,16 @@ export class TaskService {
           this.projectAdded$.next();
         })
       );
+  }
+
+  updateProjectName(id: string, projectData: ProjectsX): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+    return this.http.put<any>(`${this.apiUrl}/boards/${id}`, projectData, requestOptions);
   }
 
   getProjectsUpdated(): Observable<void> {
@@ -234,14 +244,6 @@ export class TaskService {
         this.router.navigate(['/projects']);
       }
     });
-  }
-
-  updateProjectName(projectName: string, newName: string) {
-    const project = this.projects.find((p) => p.projectName === projectName);
-
-    if (project) {
-      project.projectName = newName;
-    }
   }
 
   getBoards(projectName: string): Board[] {
