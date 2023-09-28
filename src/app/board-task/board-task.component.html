@@ -1,4 +1,4 @@
-<div class="task_block" id={{task.id}}>
+<div class="task_block" id={{task._id}}>
     <div class="task_options">
         <select name="priority" id="priority" [(ngModel)]="selectedPriority"
             [ngClass]="{'low': selectedPriority === 'low', 'high': selectedPriority === 'high'}">
@@ -8,9 +8,9 @@
         <span (click)="showOptions()">...</span>
         <div *ngIf="confirmation" class="delete_confirmation" (mouseleave)="declineOptions()">
             <button (click)="updateTask()">Change</button>
-            <button (click)="deleteTask(task.id, task.name)">Delete</button>
+            <button (click)="deleteTask()">Delete</button>
         </div>
     </div>
-    <h1>{{task.name}}</h1>
+    <h1>{{task.title}}</h1>
     <p>{{task.description}}</p>
 </div>

@@ -28,8 +28,8 @@
         </svg>
     </div>
     <div class="tasks" >
-        <!-- <app-board-task class="task-box" *ngFor="let tasks of board.tasks" [task]="tasks" [boardName]="boardName" [projectName]="projectName" cdkDrag -->
-            <!-- ></app-board-task> -->
+        <app-board-task class="task-box" *ngFor="let task of tasks" [task]="task" [boardName]="boardName" [projectName]="projectName" cdkDrag (taskDeleted)="onDeleteTask($event)" (taskChanged)="onUpdateTask()">
+        </app-board-task>
     </div>
 </div>
 <div *ngIf="showForm" class="center-form">

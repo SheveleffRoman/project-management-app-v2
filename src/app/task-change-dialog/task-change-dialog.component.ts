@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TaskX } from '../task.service';
 
 @Component({
   selector: 'app-task-change-dialog',
@@ -9,7 +10,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class TaskChangeDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<TaskChangeDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: taskChangeData
+    @Inject(MAT_DIALOG_DATA) public data: TaskX
   ) {}
 
   onChange(): void {
@@ -22,6 +23,6 @@ export class TaskChangeDialogComponent {
 }
 
 export interface taskChangeData {
-  name: string;
+  title: string;
   description: string;
 }

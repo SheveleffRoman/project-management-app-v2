@@ -1,9 +1,18 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
-import { Projects, Task, TaskService } from '../task.service';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { Projects, Task, TaskService, TaskX } from '../task.service';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { TaskChangeDialogComponent, taskChangeData } from '../task-change-dialog/task-change-dialog.component';
-
-
+import {
+  TaskChangeDialogComponent,
+  taskChangeData,
+} from '../task-change-dialog/task-change-dialog.component';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-board-task',
@@ -11,24 +20,36 @@ import { TaskChangeDialogComponent, taskChangeData } from '../task-change-dialog
   styleUrls: ['./board-task.component.scss'],
 })
 export class BoardTaskComponent {
-
   selectedPriority: string = 'low';
   confirmation = false;
 
-  @Input() task!: Task;
+  @Output() taskDeleted = new EventEmitter<TaskX>();
+  @Output() taskChanged = new EventEmitter<any>();
+
+  @Input() task!: TaskX;
   @Input() boardName = '';
   @Input() projectName!: string;
 
-  constructor (private taskService: TaskService, public dialog: MatDialog) {}
-  
+  constructor(private taskService: TaskService, public dialog: MatDialog) {}
 
   showOptions() {
     this.confirmation = true;
   }
 
-  deleteTask(id: number, taskName: string) {
-    console.log(this.projectName)
-    this.taskService.deleteTask(this.projectName, this.boardName, id, taskName);
+  deleteTask() {
+    this.taskService
+      .deleteTask(
+        this.task.boardId!,
+        this.task.columnId!,
+        this.task._id!,
+        this.task.title
+      )
+      .subscribe((result: boolean) => {
+        // Отправляем информацию о задаче в родительский компонент для удаления
+        if (result) {
+          this.taskDeleted.emit(this.task);
+        }
+      });
   }
 
   declineOptions() {
@@ -36,6 +57,13 @@ export class BoardTaskComponent {
   }
 
   updateTask() {
-    this.taskService.updateTask(this.projectName, this.boardName, this.task.id, this.task)
+    console.log(this.task);
+    this.taskService.updateTask(this.task).subscribe(
+      (result: boolean) => {
+        if (result) {
+          this.taskChanged.emit()
+        }
+      }
+    );
   }
 }
