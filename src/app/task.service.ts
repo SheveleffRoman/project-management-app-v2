@@ -44,14 +44,14 @@ export interface Task {
 }
 
 export interface TaskX {
-  _id: string;
+  _id?: string;
   title: string;
   order: number;
-  ProjectId: string;
-  BoardId: string;
+  boardId?: string;
+  columnId?: string;
   description: string;
-  userId: number;
-  users: string[];
+  userId: string;
+  users?: string[];
 }
 
 @Injectable({
@@ -160,10 +160,21 @@ export class TaskService {
   }
 
   showTaskChangeDialog(
-    name: string,
-    description: string
-  ): Observable<taskChangeData> {
-    const taskChangeDialogData: taskChangeData = { name, description };
+    title: string,
+    order: number,
+    BoardId: string,
+    description: string,
+    userId: string,
+    users: string[]
+  ): Observable<TaskX> {
+    const taskChangeDialogData: TaskX = {
+      title,
+      order,
+      columnId: BoardId,
+      description,
+      userId,
+      users,
+    };
     const dialogRef = this.dialog.open(TaskChangeDialogComponent, {
       width: '400px',
       data: taskChangeDialogData,
@@ -329,7 +340,11 @@ export class TaskService {
     );
   }
 
-  updateBoardName(projectId: string, boardId: string, columnData: BoardX): Observable<any> {
+  updateBoardName(
+    projectId: string,
+    boardId: string,
+    columnData: BoardX
+  ): Observable<any> {
     this.tokenKey = this.authService.getToken();
     const headers = new HttpHeaders({
       accept: 'application/json',
@@ -346,97 +361,116 @@ export class TaskService {
 
   //////////////////////////////////TASKS//////////////////////////////////
 
-  getTasks(boardName: string): Task[] {
-    const board = this.projects
-      .flatMap((p) => p.boards)
-      .find((b) => b.boardName === boardName);
-    return board ? board.tasks : [];
+  getTasks(projectId: string, boardId: string): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+    return this.http.get<any>(
+      `${this.apiUrl}/boards/${projectId}/columns/${boardId}/tasks`,
+      requestOptions
+    );
   }
 
-  addTask(projectName: string, boardName: string, task: Task) {
-    const project = this.projects.find((p) => p.projectName === projectName);
-
-    if (project) {
-      const board = project.boards.find((b) => b.boardName === boardName);
-
-      if (board) {
-        const newId = Math.max(...board.tasks.map((t) => t.id), 0) + 1;
-        const newTask = {
-          id: newId,
-          name: task.name,
-          description: task.description,
-        };
-        board.tasks.push(newTask);
-      }
-    }
+  addTask(
+    projectId: string,
+    boardId: string,
+    taskData: TaskX
+  ): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+    return this.http.post<any>(
+      `${this.apiUrl}/boards/${projectId}/columns/${boardId}/tasks`,
+      taskData,
+      requestOptions
+    );
   }
 
   deleteTask(
-    projectName: string,
-    boardName: string,
-    id: number,
+    projectId: string,
+    boardId: string,
+    taskId: string,
     taskName: string
-  ) {
-    this.showConfirmationDialog(
+  ): Observable<any> {
+    return this.showConfirmationDialog(
       'Delete file',
       ` Would you like to delete ${taskName} task`
-    ).subscribe((result: boolean) => {
-      if (result) {
-        // Если пользователь подтвердил удаление
-        const project = this.projects.find(
-          (p) => p.projectName === projectName
-        );
-
-        if (project) {
-          const board = project.boards.find((b) => b.boardName === boardName);
-
-          if (board) {
-            const taskIndex = board.tasks.findIndex((t) => t.id === id);
-
-            if (taskIndex !== -1) {
-              board.tasks.splice(taskIndex, 1);
-            }
-          }
+    ).pipe(
+      switchMap((result: boolean) => {
+        if (result) {
+          this.tokenKey = this.authService.getToken();
+          const headers = new HttpHeaders({
+            accept: 'application/json',
+            Authorization: `Bearer ${this.tokenKey}`,
+          });
+          const requestOptions = { headers: headers };
+          return this.http
+            .delete<any>(
+              `${this.apiUrl}/boards/${projectId}/columns/${boardId}/tasks/${taskId}`,
+              requestOptions
+            )
+            .pipe(
+              tap(() => {
+                //  this.projectAdded$.next();
+                console.log('Delete complete');
+              })
+            );
+        } else {
+          // Return some default value or handle the case where the user didn't confirm deletion.
+          return of(result);
         }
-      }
-    });
+      })
+    );
   }
 
-  updateTask(
-    projectName: string,
-    boardName: string,
-    taskId: number,
-    taskData: taskChangeData
-  ) {
+  updateTask(taskData: TaskX): Observable<any> {
     // Открываем диалоговое окно
     const dialogRef = this.showTaskChangeDialog(
-      taskData.name,
-      taskData.description
+      taskData.title,
+      taskData.order,
+      taskData.columnId!,
+      taskData.description,
+      taskData.userId,
+      taskData.users!
     );
 
     // Ожидаем закрытия диалогового окна и получаем результат
-    dialogRef.subscribe((result) => {
-      if (result) {
-        console.log(result);
-        // Пользователь подтвердил обновление задачи
-        const project = this.projects.find(
-          (p) => p.projectName === projectName
-        );
+    return dialogRef.pipe(
+      switchMap((newTask) => {
+        if (newTask) {
+          console.log(newTask);
+          // Пользователь подтвердил обновление задачи
+          this.tokenKey = this.authService.getToken();
+          const headers = new HttpHeaders({
+            accept: 'application/json',
+            Authorization: `Bearer ${this.tokenKey}`,
+          });
+          const requestOptions = { headers: headers };
 
-        if (project) {
-          const board = project.boards.find((b) => b.boardName === boardName);
-
-          if (board) {
-            const task = board.tasks.find((t) => t.id === taskId);
-
-            if (task) {
-              // Обновляем данные задачи
-              task.name = result.name;
-              task.description = result.description;
-            }
-          }
+          return this.http
+            .put<any>(
+              `${this.apiUrl}/boards/${taskData.boardId}/columns/${taskData.columnId}/tasks/${taskData._id}`,
+              newTask,
+              requestOptions
+            )
+            .pipe
+            // You can add more operators or handling here if needed
+            // tap(() => {
+            //   //  this.projectAdded$.next();
+            //   console.log('Update complete');
+            // })
+            ();
+        } else {
+          // Return some default value or handle the case where the user didn't confirm the update.
+          return of(null);
         }
-      }
-    });
+      })
+    );
   }
 }
