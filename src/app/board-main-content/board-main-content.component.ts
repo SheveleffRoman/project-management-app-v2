@@ -128,7 +128,7 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     });
   }
 
-  dropCol(event: CdkDragDrop<BoardX>) {
+  dropCol(event: CdkDragDrop<BoardX[]>) {
     // console.log(event.container.data.order)
     console.log(this.boards);
     // console.log(this.boards[event.previousIndex].order)
@@ -138,17 +138,9 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
       order: event.currentIndex,
     };
 
-    // const boardDataLoop: BoardX = {
-    //   title: this.boards[event.currentIndex].title,
-    //   order: event.previousIndex
-    // }
+    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
 
-    // this.taskService.updateBoardOrder(this.projectId, this.boards[event.previousIndex]._id!, boardData).subscribe()
-
-    // this.taskService.updateBoardOrder(this.projectId, this.boards[event.currentIndex]._id!, boardDataLoop).subscribe()
-
-    moveItemInArray(this.boards, event.previousIndex, event.currentIndex);
-
+    console.log(event.container.data)
 
     this.boards.forEach((board, index) => {
       board.order = index;
@@ -158,41 +150,11 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
           };
       this.taskService.updateBoardOrder(this.projectId, board._id!, boardDataLoop).subscribe()
     })
-
-    // this.boards.forEach((board, index) => {
-    //   const boardDataLoop: BoardX = {
-    //     title: board.title,
-    //     order: index,
-    //   };
-
-    //   this.taskService.updateBoardOrder(
-    //     this.projectId,
-    //     board.title,
-    //     boardDataLoop
-    //   ).subscribe();
-    // });
   }
 
   compareBoardsByOrder(a: TaskX, b: TaskX) {
     return a.order - b.order;
   }
-
-  // dropTasks(event: CdkDragDrop<SetBoardsTasks[]>) {
-  //   if (event.previousContainer === event.container) {
-  //     moveItemInArray(
-  //       event.container.data,
-  //       event.previousIndex,
-  //       event.currentIndex
-  //     );
-  //   } else {
-  //     transferArrayItem(
-  //       event.previousContainer.data,
-  //       event.container.data,
-  //       event.previousIndex,
-  //       event.currentIndex
-  //     );
-  //   }
-  // }
 
   showProjectRenameForm() {
     this.showRenameProjectForm = true;

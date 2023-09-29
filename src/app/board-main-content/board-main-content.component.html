@@ -72,7 +72,7 @@
       </span>
     </div>
   </div>
-  <div class="boards_wrapper" cdkDropList (cdkDropListDropped)="dropCol($event)">
+  <div class="boards_wrapper" cdkDropListGroup cdkDropList (cdkDropListDropped)="dropCol($event)" [cdkDropListData]="boards">
     <app-board-column *ngFor="let board of boards" [board]="board" [boards]="boards" [boardId]="board._id!" [projectId]="projectId" [projectName]="projectName" [userId]="userId" [boardName]='board.title' cdkDrag (boardDeleted)="onBoardDeleted($event)"></app-board-column>
      <!-- нижняя с дропом таск -->
     <!-- <app-board-column *ngFor="let board of boards" [board]="board" [projectName]="projectName" [boardName]='board.title' cdkDropList [cdkDropListData]="board" (cdkDropListDropped)="dropTasks($event)" cdkDrag></app-board-column> -->

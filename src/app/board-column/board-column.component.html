@@ -27,7 +27,7 @@
                 stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
     </div>
-    <div class="tasks" cdkDropList (cdkDropListDropped)="dropTask($event)">
+    <div class="tasks" cdkDropList [cdkDropListData]="tasks" (cdkDropListDropped)="dropTask($event)">
         <app-board-task class="task-box" *ngFor="let task of tasks" [task]="task" [boardName]="boardName" [projectName]="projectName" cdkDrag (taskDeleted)="onDeleteTask($event)" (taskChanged)="onUpdateTask()">
         </app-board-task>
     </div>

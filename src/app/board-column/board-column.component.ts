@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import {
   Board,
@@ -29,7 +29,6 @@ export class BoardColumnComponent implements OnInit {
   @Input() boardId: string = '';
   @Input() userId: string = '';
 
-
   @Output() boardDeleted = new EventEmitter<string>(); // Определение события
 
   tasks: TaskX[] = [];
@@ -39,13 +38,8 @@ export class BoardColumnComponent implements OnInit {
   isHidden: boolean = false;
   showRenameBoardForm: boolean = false;
 
-
   constructor(private taskService: TaskService) {}
 
-  dropTask(event: CdkDragDrop<TaskX[]>) {
-    console.log(this.tasks);
-    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
-  }
 
   ngOnInit(): void {
     this.getTasksByBoard();
@@ -78,6 +72,27 @@ export class BoardColumnComponent implements OnInit {
 
   compareTasksByOrder(a: TaskX, b: TaskX) {
     return a.order - b.order;
+  }
+
+  dropTask(event: CdkDragDrop<TaskX[]>) {
+    if (event.previousContainer === event.container) {
+      // console.log(this.tasks);
+      // console.log(event.container.id);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+      // console.log(this.tasks);
+      console.log(event.container.id);
+    }
   }
 
   // getTasksByProject() {
