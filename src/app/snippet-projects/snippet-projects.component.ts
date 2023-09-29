@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Projects, ProjectsX, TaskService } from '../task.service';
 import { FakeAuthService } from '../fake-auth.service';
-import { Subscription } from 'rxjs';
+import { Subscription, skipUntil } from 'rxjs';
 
 @Component({
   selector: 'app-snippet-projects',
@@ -29,6 +29,7 @@ export class SnippetProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSnippets();
+    console.log(this.snippets)
     this.projectsUpdatedSubscription = this.taskService.getProjectsUpdated().subscribe(() => {
       // Здесь можно выполнить запрос на получение всех проектов заново
       this.snippets = [];
@@ -52,7 +53,7 @@ export class SnippetProjectsComponent implements OnInit {
               const project: ProjectsX = {
                 _id: projectData._id,
                 title: projectData.title,
-                owner: '',
+                owner: projectData.owner,
                 users: [],
               };
       
