@@ -78,6 +78,7 @@ export class FakeAuthService {
   }
 
   getToken() {
+    this.authorize(); //проверить работу
     return localStorage.getItem('token');
   }
 
