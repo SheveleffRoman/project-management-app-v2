@@ -54,7 +54,7 @@ export class BoardColumnComponent implements OnInit {
       .subscribe((tasks) => {
         console.log(tasks);
         if (tasks && tasks.length > 0) {
-          // Сортируем задачи по порядку (order)
+          // Сортировка тасков по порядку (tasks.order)
           this.tasks = tasks.sort(this.compareTasksByOrder);
         }
       });
