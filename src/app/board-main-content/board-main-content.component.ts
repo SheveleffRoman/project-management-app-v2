@@ -2,10 +2,13 @@ import { Component, DoCheck, OnInit } from '@angular/core';
 import {
   Board,
   BoardX,
+  BoardXOrder,
   Projects,
   ProjectsX,
+  SetBoardsTasks,
   Task,
   TaskService,
+  TaskX,
 } from '../task.service';
 import {
   CdkDragDrop,
@@ -24,7 +27,6 @@ import { FakeAuthService } from '../fake-auth.service';
   styleUrls: ['./board-main-content.component.scss'],
 })
 export class BoardMainContentComponent implements OnInit, DoCheck {
-
   projectName: string = '';
 
   login: string | null = '';
@@ -32,6 +34,9 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   projectId: string = '';
 
   boards: BoardX[] = [];
+
+  tasksSet: TaskX[] = []; // все таски в проекте
+  setTasksByBoards: SetBoardsTasks[] = []; // объединение колонок и тасков
 
   newProjectName: string = '';
   prevProjectName: string = '';
@@ -53,11 +58,10 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
       this.projectName = decodeURIComponent(params['projectName']);
       this.findBoardsByProject(); // Перенесено сюда, чтобы projectId был установлен перед getBoards
     });
-  
+
     this.login = this.authService.getLogin();
     this.findUserId();
 
-  
     this.prevProjectName = this.projectName;
     console.log(`Project name: ${this.projectName}`);
   }
@@ -77,13 +81,40 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
   findBoardsByProject() {
     this.taskService.getProjectsAll().subscribe((projects) => {
-      const project = projects.find((project: any) => this.projectName === project.title);
+      const project = projects.find(
+        (project: any) => this.projectName === project.title
+      );
       console.log(project);
       this.projectId = project._id;
       console.log(`Project Id:${this.projectId}`);
-  
+
       // Теперь, когда projectId установлен, можно вызвать getBoards(this.projectId)
       this.getBoards(this.projectId);
+      this.getTasksByProject(this.projectId);
+    });
+  }
+
+  getTasksByProject(id: string) {
+    this.taskService.getTasksByProject(id).subscribe((tasks) => {
+      this.tasksSet = tasks;
+      console.log(this.tasksSet);
+      this.combineBoardsAndTasks();
+      console.log(this.setTasksByBoards);
+    });
+  }
+
+  combineBoardsAndTasks() {
+    this.setTasksByBoards = this.boards.map((board) => {
+      // Фильтруем массив TasksX по columnId, чтобы найти связанные задачи для текущей доски
+      const relatedTasks = this.tasksSet.filter(
+        (task) => task.columnId === board._id
+      );
+
+      // Возвращаем объект, содержащий доску и связанные задачи
+      return {
+        board: board,
+        tasks: relatedTasks,
+      };
     });
   }
 
@@ -98,20 +129,65 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   }
 
   dropCol(event: CdkDragDrop<BoardX>) {
+    // console.log(event.container.data.order)
+    console.log(this.boards);
+    // console.log(this.boards[event.previousIndex].order)
+
+    const boardData: BoardX = {
+      title: this.boards[event.previousIndex].title,
+      order: event.currentIndex,
+    };
+
+    // const boardDataLoop: BoardX = {
+    //   title: this.boards[event.currentIndex].title,
+    //   order: event.previousIndex
+    // }
+
+    // this.taskService.updateBoardOrder(this.projectId, this.boards[event.previousIndex]._id!, boardData).subscribe()
+
+    // this.taskService.updateBoardOrder(this.projectId, this.boards[event.currentIndex]._id!, boardDataLoop).subscribe()
+
     moveItemInArray(this.boards, event.previousIndex, event.currentIndex);
+
+
+    this.boards.forEach((board, index) => {
+      board.order = index;
+      const boardDataLoop: BoardX = {
+            title: board.title,
+            order: index,
+          };
+      this.taskService.updateBoardOrder(this.projectId, board._id!, boardDataLoop).subscribe()
+    })
+
+    // this.boards.forEach((board, index) => {
+    //   const boardDataLoop: BoardX = {
+    //     title: board.title,
+    //     order: index,
+    //   };
+
+    //   this.taskService.updateBoardOrder(
+    //     this.projectId,
+    //     board.title,
+    //     boardDataLoop
+    //   ).subscribe();
+    // });
   }
 
-  // dropTasks(event: CdkDragDrop<BoardX>) {
+  compareBoardsByOrder(a: TaskX, b: TaskX) {
+    return a.order - b.order;
+  }
+
+  // dropTasks(event: CdkDragDrop<SetBoardsTasks[]>) {
   //   if (event.previousContainer === event.container) {
   //     moveItemInArray(
-  //       event.container.data.tasks,
+  //       event.container.data,
   //       event.previousIndex,
   //       event.currentIndex
   //     );
   //   } else {
   //     transferArrayItem(
-  //       event.previousContainer.data.tasks,
-  //       event.container.data.tasks,
+  //       event.previousContainer.data,
+  //       event.container.data,
   //       event.previousIndex,
   //       event.currentIndex
   //     );
@@ -162,25 +238,26 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
   getBoards(id: string) {
     this.taskService.getBoardsByProject(id).subscribe((columns) => {
-      this.boards = columns;
-      console.log(columns)
+      // this.boards = columns;
+      this.boards = columns.sort(this.compareBoardsByOrder);
+      console.log(columns);
     });
   }
 
   addBoard() {
     const board: BoardX = {
       title: this.newBoardName,
-      order: this.boards.length,  //переделать для корректной перезаписи порядка после удаления 
+      order: this.boards.length, //переделать для корректной перезаписи порядка после удаления
     };
-    this.taskService.addBoard(this.projectId, board).subscribe(() =>
-      this.findBoardsByProject()
-    );
+    this.taskService
+      .addBoard(this.projectId, board)
+      .subscribe(() => this.findBoardsByProject());
     this.showForm = false;
   }
 
   onBoardDeleted(boardId: string) {
     // Обновите данные в родительском компоненте
-    this.boards = this.boards.filter(board => board._id !== boardId);
+    this.boards = this.boards.filter((board) => board._id !== boardId);
   }
 
   showAddForm() {

@@ -1,7 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
-import { Board, BoardX, Projects, Task, TaskService, TaskX } from '../task.service';
+import {
+  Board,
+  BoardX,
+  Projects,
+  SetBoardsTasks,
+  Task,
+  TaskService,
+  TaskX,
+} from '../task.service';
 
 @Component({
   selector: 'app-board-column',
@@ -21,6 +29,7 @@ export class BoardColumnComponent implements OnInit {
   @Input() boardId: string = '';
   @Input() userId: string = '';
 
+
   @Output() boardDeleted = new EventEmitter<string>(); // Определение события
 
   tasks: TaskX[] = [];
@@ -30,10 +39,17 @@ export class BoardColumnComponent implements OnInit {
   isHidden: boolean = false;
   showRenameBoardForm: boolean = false;
 
+
   constructor(private taskService: TaskService) {}
 
+  dropTask(event: CdkDragDrop<TaskX[]>) {
+    console.log(this.tasks);
+    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
+  }
+
   ngOnInit(): void {
-    this.getTasksByBoard()
+    this.getTasksByBoard();
+    // this.getTasksByProject()
   }
 
   showAddForm() {
@@ -52,19 +68,28 @@ export class BoardColumnComponent implements OnInit {
     this.taskService
       .getTasks(this.projectId, this.boardId)
       .subscribe((tasks) => {
-        console.log(tasks);
+        // console.log(tasks);
         if (tasks && tasks.length > 0) {
           // Сортировка тасков по порядку (tasks.order)
           this.tasks = tasks.sort(this.compareTasksByOrder);
         }
       });
   }
-  
+
   compareTasksByOrder(a: TaskX, b: TaskX) {
     return a.order - b.order;
   }
-  
-  
+
+  // getTasksByProject() {
+  //   this.taskService.getTasksByProject(this.projectId).subscribe(
+  //     (tasks) => {
+  //       this.tasksSet = tasks
+  //       console.log(this.tasksSet)
+  //     }
+  //   )
+
+  // }
+
   addNewTask() {
     if (this.newTaskName && this.newTaskDescription) {
       const taskData: TaskX = {
@@ -74,7 +99,7 @@ export class BoardColumnComponent implements OnInit {
         userId: this.userId,
         users: [''],
       };
-      
+
       this.taskService
         .addTask(this.projectId, this.board._id!, taskData)
         .subscribe((res) => {
@@ -82,10 +107,10 @@ export class BoardColumnComponent implements OnInit {
           // После успешного добавления задачи, вызываем getTasksByBoard()
           // чтобы обновить данные и отрисовать актуальные данные.
           this.getTasksByBoard();
-  
+
           // Скрыть форму после добавления
           this.showForm = false;
-  
+
           // Сброс полей ввода
           this.newTaskName = '';
           this.newTaskDescription = '';
@@ -96,14 +121,12 @@ export class BoardColumnComponent implements OnInit {
   onDeleteTask(task: TaskX) {
     // Здесь вы можете выполнить необходимые действия при удалении задачи
     // Например, удалить задачу из массива this.tasks
-    this.tasks = this.tasks.filter(t => t._id !== task._id);
+    this.tasks = this.tasks.filter((t) => t._id !== task._id);
   }
 
   onUpdateTask() {
-    this.getTasksByBoard()
+    this.getTasksByBoard();
   }
-  
-  
 
   showBoardRenameForm() {
     this.showRenameBoardForm = true;
@@ -124,7 +147,7 @@ export class BoardColumnComponent implements OnInit {
     if (this.newBoardName) {
       const columnData: BoardX = {
         title: this.newBoardName,
-        order: this.boards.length,
+        order: this.board.order,
       };
 
       this.taskService
