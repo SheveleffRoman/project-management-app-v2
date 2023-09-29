@@ -37,6 +37,11 @@ export interface BoardX {
   Project?: string;
 }
 
+export interface BoardXOrder {
+  _id: string;
+  order: number;
+}
+
 export interface Task {
   id: number;
   name: string;
@@ -52,6 +57,11 @@ export interface TaskX {
   description: string;
   userId: string;
   users?: string[];
+}
+
+export interface SetBoardsTasks {
+  board: BoardX;
+  tasks: TaskX[];
 }
 
 @Injectable({
@@ -359,6 +369,20 @@ export class TaskService {
     );
   }
 
+  updateBoardOrder(projectId: string, boardId: string, newData: BoardX ): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+    return this.http.put<any>(
+      `${this.apiUrl}/boards/${projectId}/columns/${boardId}`,
+      newData,
+      requestOptions
+    );
+  }
+
   //////////////////////////////////TASKS//////////////////////////////////
 
   getTasks(projectId: string, boardId: string): Observable<any> {
@@ -370,6 +394,19 @@ export class TaskService {
     const requestOptions = { headers: headers };
     return this.http.get<any>(
       `${this.apiUrl}/boards/${projectId}/columns/${boardId}/tasks`,
+      requestOptions
+    );
+  }
+
+  getTasksByProject(projectId: string): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+    return this.http.get<any>(
+      `${this.apiUrl}/tasksSet/${projectId}`,
       requestOptions
     );
   }
