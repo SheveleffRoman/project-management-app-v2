@@ -90,33 +90,33 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
       // Теперь, когда projectId установлен, можно вызвать getBoards(this.projectId)
       this.getBoards(this.projectId);
-      this.getTasksByProject(this.projectId);
+      // this.getTasksByProject(this.projectId);
     });
   }
 
-  getTasksByProject(id: string) {
-    this.taskService.getTasksByProject(id).subscribe((tasks) => {
-      this.tasksSet = tasks;
-      console.log(this.tasksSet);
-      this.combineBoardsAndTasks();
-      console.log(this.setTasksByBoards);
-    });
-  }
+  // getTasksByProject(id: string) {
+  //   this.taskService.getTasksByProject(id).subscribe((tasks) => {
+  //     this.tasksSet = tasks;
+  //     console.log(this.tasksSet);
+  //     this.combineBoardsAndTasks();
+  //     console.log(this.setTasksByBoards);
+  //   });
+  // }
 
-  combineBoardsAndTasks() {
-    this.setTasksByBoards = this.boards.map((board) => {
-      // Фильтруем массив TasksX по columnId, чтобы найти связанные задачи для текущей доски
-      const relatedTasks = this.tasksSet.filter(
-        (task) => task.columnId === board._id
-      );
+  // combineBoardsAndTasks() {
+  //   this.setTasksByBoards = this.boards.map((board) => {
+  //     // Фильтруем массив TasksX по columnId, чтобы найти связанные задачи для текущей доски
+  //     const relatedTasks = this.tasksSet.filter(
+  //       (task) => task.columnId === board._id
+  //     );
 
-      // Возвращаем объект, содержащий доску и связанные задачи
-      return {
-        board: board,
-        tasks: relatedTasks,
-      };
-    });
-  }
+  //     // Возвращаем объект, содержащий доску и связанные задачи
+  //     return {
+  //       board: board,
+  //       tasks: relatedTasks,
+  //     };
+  //   });
+  // }
 
   findUserId() {
     this.authService.getUserAll().subscribe((users) => {
