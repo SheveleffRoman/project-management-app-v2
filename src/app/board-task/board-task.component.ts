@@ -29,6 +29,7 @@ export class BoardTaskComponent {
   @Input() task!: TaskX;
   @Input() boardName = '';
   @Input() projectName!: string;
+  @Input() order: number | undefined;
 
   constructor(private taskService: TaskService, public dialog: MatDialog) {}
 

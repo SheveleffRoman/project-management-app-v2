@@ -74,17 +74,17 @@ export class BoardColumnComponent implements OnInit {
     return a.order - b.order;
   }
 
-  dropTask(event: CdkDragDrop<TaskX[]>) {
+  dropTask(event: CdkDragDrop<TaskX[]>) {   //  добавить отправку на сервер путем переписывания поля с id колонки, и ордер переписать в обоих случаях
     if (event.previousContainer === event.container) {
       // console.log(this.tasks);
       // console.log(event.container.id);
-      moveItemInArray(
+      moveItemInArray(  // случай 1
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
     } else {
-      transferArrayItem(
+      transferArrayItem( // случай 2
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
