@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import {
   Board,
@@ -9,7 +13,9 @@ import {
   Task,
   TaskService,
   TaskX,
+  UpdateTaskSet,
 } from '../task.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-board-column',
@@ -39,7 +45,6 @@ export class BoardColumnComponent implements OnInit {
   showRenameBoardForm: boolean = false;
 
   constructor(private taskService: TaskService) {}
-
 
   ngOnInit(): void {
     this.getTasksByBoard();
@@ -74,25 +79,49 @@ export class BoardColumnComponent implements OnInit {
     return a.order - b.order;
   }
 
-  dropTask(event: CdkDragDrop<TaskX[]>) {   //  добавить отправку на сервер путем переписывания поля с id колонки, и ордер переписать в обоих случаях
+  dropTask(event: CdkDragDrop<TaskX[]>) {
     if (event.previousContainer === event.container) {
-      // console.log(this.tasks);
-      // console.log(event.container.id);
-      moveItemInArray(  // случай 1
+      moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
     } else {
-      transferArrayItem( // случай 2
+      transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-      // console.log(this.tasks);
-      console.log(event.container.id);
+      event.item.data.columnId = this.boardId;
     }
+
+    this.tasks.forEach((task, index) => {
+      task.order = index;
+    });
+
+    this.updateTaskOrderAndColumns();
+  }
+
+  updateTaskOrderAndColumns(): void {
+    const setOfTask: UpdateTaskSet[] = this.tasks.map((task) => ({
+      _id: task._id,
+      order: task.order,
+      columnId: task.columnId,
+    }));
+
+    this.taskService.updateSetOfTasks(setOfTask).subscribe({
+      next: () => {
+        // Успешная обработка запроса
+        console.log('Update complete');
+      },
+      error: (error) => {
+        // Ошибка при обработке запроса
+        console.error('Error updating tasks:', error);
+
+        // Можно добавить логику для отображения сообщения об ошибке пользователю
+      },
+    });
   }
 
   // getTasksByProject() {

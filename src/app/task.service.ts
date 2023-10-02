@@ -4,7 +4,15 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
 } from './confirmation-dialog/confirmation-dialog.component';
-import { Observable, Subject, of, switchMap, tap } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  catchError,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import { Router } from '@angular/router';
 import {
   TaskChangeDialogComponent,
@@ -57,6 +65,12 @@ export interface TaskX {
   description: string;
   userId: string;
   users?: string[];
+}
+
+export interface UpdateTaskSet {
+  _id: string | undefined;
+  order: number;
+  columnId: string | undefined;
 }
 
 export interface SetBoardsTasks {
@@ -369,7 +383,11 @@ export class TaskService {
     );
   }
 
-  updateBoardOrder(projectId: string, boardId: string, newData: BoardX ): Observable<any> {
+  updateBoardOrder(
+    projectId: string,
+    boardId: string,
+    newData: BoardX
+  ): Observable<any> {
     this.tokenKey = this.authService.getToken();
     const headers = new HttpHeaders({
       accept: 'application/json',
@@ -464,6 +482,27 @@ export class TaskService {
         }
       })
     );
+  }
+
+  updateSetOfTasks(taskData: UpdateTaskSet[]): Observable<any> {
+    this.tokenKey = this.authService.getToken();
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Bearer ${this.tokenKey}`,
+    });
+    const requestOptions = { headers: headers };
+
+    return this.http
+      .patch<any>(`${this.apiUrl}/tasksSet`, taskData, requestOptions)
+      .pipe(
+        catchError((error: any) => {
+          // Здесь можно добавить логирование или обработку ошибок
+          console.error('An error occurred:', error);
+
+          // Возвращаем ошибку как Observable
+          return throwError(() => new Error(error));
+        })
+      );
   }
 
   updateTask(taskData: TaskX): Observable<any> {
