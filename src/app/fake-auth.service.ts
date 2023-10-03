@@ -100,7 +100,7 @@ export class FakeAuthService {
       this.tokenKey = localStorage.getItem('token') as string;
       // this.username = localStorage.getItem('token') as string;
     } else {
-      this.router.navigate(['/welcome']);
+      // this.router.navigate(['/welcome']);
       this.logout();
     }
   }
@@ -176,7 +176,6 @@ export class FakeAuthService {
     this.isAuthenticated = false;
     localStorage.setItem('isAuth', 'false');
     this.removeToken();
-    localStorage.removeItem('loggedInUser');
     this.showErrorDialog(
       'Вы вышли из аккаунта',
       'После нажатия на кнопку вы будете перенаправлены на главную страницу',

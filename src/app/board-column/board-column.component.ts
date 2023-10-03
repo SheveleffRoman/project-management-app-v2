@@ -16,6 +16,7 @@ import {
   UpdateTaskSet,
 } from '../task.service';
 import { take } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-board-column',
@@ -44,7 +45,7 @@ export class BoardColumnComponent implements OnInit {
   isHidden: boolean = false;
   showRenameBoardForm: boolean = false;
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService, private newtwork: MatSnackBar) {}
 
   ngOnInit(): void {
     this.getTasksByBoard();
@@ -114,10 +115,12 @@ export class BoardColumnComponent implements OnInit {
       next: () => {
         // Успешная обработка запроса
         console.log('Update complete');
+        this.newtwork.open('Saved', 'ok', {duration: 1500});
       },
       error: (error) => {
         // Ошибка при обработке запроса
         console.error('Error updating tasks:', error);
+        this.newtwork.open('Something went wrong...', 'ok', {duration: 3000});
 
         // Можно добавить логику для отображения сообщения об ошибке пользователю
       },

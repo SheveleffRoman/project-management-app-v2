@@ -20,6 +20,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FakeAuthService } from '../fake-auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-board-main-content',
@@ -50,7 +51,8 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     private taskService: TaskService,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: FakeAuthService
+    private authService: FakeAuthService,
+    private newtwork: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -148,7 +150,20 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
             title: board.title,
             order: index,
           };
-      this.taskService.updateBoardOrder(this.projectId, board._id!, boardDataLoop).subscribe()
+      this.taskService.updateBoardOrder(this.projectId, board._id!, boardDataLoop).subscribe({
+        next: () => {
+          // Успешная обработка запроса
+          console.log('Update complete');
+          this.newtwork.open('Saved', 'ok', {duration: 1500});
+        },
+        error: (error) => {
+          // Ошибка при обработке запроса
+          console.error('Error updating tasks:', error);
+          this.newtwork.open('Something went wrong...', 'ok', {duration: 3000});
+  
+          // Можно добавить логику для отображения сообщения об ошибке пользователю
+        },
+      })
     })
   }
 
