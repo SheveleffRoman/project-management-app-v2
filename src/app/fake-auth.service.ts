@@ -12,6 +12,13 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { profileData } from './board-header-profile/board-header-profile.component';
 import { ConfirmationDialogComponent, ConfirmationDialogData } from './confirmation-dialog/confirmation-dialog.component';
 
+
+export interface User {
+  _id: string;
+  name: string;
+  login: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })

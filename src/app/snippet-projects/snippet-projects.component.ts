@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Projects, ProjectsX, TaskService } from '../task.service';
-import { FakeAuthService } from '../fake-auth.service';
+import { FakeAuthService, User } from '../fake-auth.service';
 import { Subscription, skipUntil } from 'rxjs';
 
 @Component({
@@ -17,11 +17,11 @@ export class SnippetProjectsComponent implements OnInit {
   snippets: ProjectsX[] = [];
 
   login: string | null = '';
-  userData: any[] = [];
+  userData: User[] = [];
   options: string[] = [];
   owner: string = '';
-  selectedUsers: string[] = [];
   userId: string = '';
+  selectedUser: string | undefined;
   projectsUpdatedSubscription: Subscription = Subscription.EMPTY;
 
   showForm: boolean = false;
@@ -42,6 +42,8 @@ export class SnippetProjectsComponent implements OnInit {
 
     this.authService.getUserAll().subscribe(
       (users) => {
+        this.userData = users;
+        console.log(this.userData);
         const user = users.find((user: any) => this.login === user.login);
         if (user) {
           this.userId = user._id;
@@ -94,7 +96,8 @@ export class SnippetProjectsComponent implements OnInit {
 
     // const ownerUser = this.userData.find((user) => user.login === this.login);
 
-      this.owner = this.userId
+      this.owner = this.userId;
+
 
     // const selectedUsersIds = this.boardsData
     //   .get('selectedUsers')
@@ -103,11 +106,16 @@ export class SnippetProjectsComponent implements OnInit {
     //     return user ? user._id : '';
     //   });
 
-    const boardData = {
+    const boardData: ProjectsX = {
       title: title,
       owner: this.owner,
-      users: [''],
+      users: [],
     };
+
+    if (this.selectedUser) {
+      // console.log(this.selectedUser);
+      boardData.users.push(this.selectedUser)
+    }
 
     this.taskService.createProject(boardData).subscribe((response) => {
       if (response) {
