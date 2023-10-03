@@ -43,7 +43,7 @@ export class SnippetProjectsComponent implements OnInit {
     this.authService.getUserAll().subscribe(
       (users) => {
         this.userData = users;
-        console.log(this.userData);
+        // console.log(this.userData);
         const user = users.find((user: any) => this.login === user.login);
         if (user) {
           this.userId = user._id;
