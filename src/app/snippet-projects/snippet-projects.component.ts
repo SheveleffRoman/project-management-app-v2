@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Projects, ProjectsX, TaskService } from '../task.service';
 import { FakeAuthService, User } from '../fake-auth.service';
 import { Subscription, skipUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { NewProjectAddFormComponent } from '../new-project-add-form/new-project-add-form.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-snippet-projects',
@@ -11,17 +14,19 @@ import { Subscription, skipUntil } from 'rxjs';
 export class SnippetProjectsComponent implements OnInit {
   constructor(
     private taskService: TaskService,
-    private authService: FakeAuthService
+    private authService: FakeAuthService,
+    private dialog: MatDialog,
+    private newtwork: MatSnackBar
   ) {}
 
   snippets: ProjectsX[] = [];
 
   login: string | null = '';
-  userData: User[] = [];
+  usersData: User[] = [];
   options: string[] = [];
   owner: string = '';
   userId: string = '';
-  selectedUser: string | undefined;
+  selectedUser: any;
   projectsUpdatedSubscription: Subscription = Subscription.EMPTY;
 
   showForm: boolean = false;
@@ -29,12 +34,14 @@ export class SnippetProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSnippets();
-    console.log(this.snippets)
-    this.projectsUpdatedSubscription = this.taskService.getProjectsUpdated().subscribe(() => {
-      // Здесь можно выполнить запрос на получение всех проектов заново
-      this.snippets = [];
-      this.getSnippets();
-    });
+    console.log(this.snippets);
+    this.projectsUpdatedSubscription = this.taskService
+      .getProjectsUpdated()
+      .subscribe(() => {
+        // Здесь можно выполнить запрос на получение всех проектов заново
+        this.snippets = [];
+        this.getSnippets();
+      });
   }
 
   getSnippets() {
@@ -42,13 +49,13 @@ export class SnippetProjectsComponent implements OnInit {
 
     this.authService.getUserAll().subscribe(
       (users) => {
-        this.userData = users;
-        // console.log(this.userData);
         const user = users.find((user: any) => this.login === user.login);
         if (user) {
           this.userId = user._id;
-          // Используйте отладочный метод для вывода информации
+          // отладочный метод для вывода информации
           this.debugInfo('User found:', user);
+          this.usersData = users.filter((user: User) => user._id !== this.userId );
+          // console.log(this.usersData);
           this.taskService.getSetProjects(this.userId).subscribe((set) => {
             // this.snippets = [];
             set.forEach((projectData: any) => {
@@ -58,7 +65,7 @@ export class SnippetProjectsComponent implements OnInit {
                 owner: projectData.owner,
                 users: [],
               };
-      
+
               this.snippets.push(project);
             });
           });
@@ -81,23 +88,45 @@ export class SnippetProjectsComponent implements OnInit {
   //   this.showForm = false;
   // }
 
-  openAddProjectForm() {
-    this.newProjectName = '';
-    this.showForm = true;
-  }
+  // openAddProjectForm() {
+  //   this.newProjectName = '';
+  //   this.showForm = true;
+  // }
 
   closeAddProjectForm() {
     this.newProjectName = '';
     this.showForm = false;
   }
 
-  addProject() {
+  openAddProjectForm(): void {
+    this.newProjectName = '';
+    
+    const dialogRef = this.dialog.open(NewProjectAddFormComponent, {
+      width: '450px',
+      data: this.usersData,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined && result.name) { // result не undefined и имеет свойство 'name'
+        console.log('Новый проект добавлен', result);
+        this.newProjectName = result.name;
+        this.selectedUser = result.selectedUser;
+        this.addProject();
+      } else {
+        console.log('Новый проект не добавлен', result);
+      }
+    });
+    
+    
+  }
+  
+
+  addProject(): void {
     const title = this.newProjectName;
 
     // const ownerUser = this.userData.find((user) => user.login === this.login);
 
-      this.owner = this.userId;
-
+    this.owner = this.userId;
 
     // const selectedUsersIds = this.boardsData
     //   .get('selectedUsers')
@@ -114,15 +143,19 @@ export class SnippetProjectsComponent implements OnInit {
 
     if (this.selectedUser) {
       // console.log(this.selectedUser);
-      boardData.users.push(this.selectedUser)
+      boardData.users = this.selectedUser;
     }
 
-    this.taskService.createProject(boardData).subscribe((response) => {
-      if (response) {
-        // После успешного создания проекта вызываем метод для обновления данных
-        console.log(response);
+    this.taskService.createProject(boardData).subscribe({
+      next: (res) => {
+        console.log('Task add complete',res)
+        this.newtwork.open('Saved', 'ok', {duration: 1500});
+      },
+      error: (error) => {
+        console.error('Error add task:', error);
+        this.newtwork.open('Something went wrong...', 'ok', {duration: 3000});
       }
-    });
+    })
     this.newProjectName = '';
     this.showForm = false;
   }
