@@ -37,6 +37,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { ProfileChangeDialogComponent } from './profile-change-dialog/profile-change-dialog.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NewProjectAddFormComponent } from './new-project-add-form/new-project-add-form.component';
 
 const routes: Routes = [
   {
@@ -87,6 +88,7 @@ const routes: Routes = [
     ConfirmationDialogComponent,
     TaskChangeDialogComponent,
     ProfileChangeDialogComponent,
+    NewProjectAddFormComponent,
   ],
   imports: [
     BrowserModule,

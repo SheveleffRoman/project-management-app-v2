@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Add new project</h1>
+<div mat-dialog-content class="input_fields">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input required [(ngModel)]="data.name" matInput>
+    <mat-error>required</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Select user</mat-label>
+    <mat-select [(ngModel)]="data.selectedUser" multiple>
+        <mat-option *ngFor="let user of data" [value]="user._id">{{user.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>No</button>
+  <button mat-button (click)="onChange()" [disabled]="!data.name">Ok</button>
+</div>
