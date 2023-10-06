@@ -103,6 +103,7 @@ const routes: Routes = [
     HttpClientModule,
     JwtModule,
     MatSnackBarModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
