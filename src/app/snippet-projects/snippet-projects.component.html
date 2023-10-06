@@ -1,8 +1,13 @@
 <div class="main_wrapper">
     <ul>
-        <a class="snippet" [routerLink]="snippet.title" *ngFor="let snippet of snippets"><li>{{snippet.title}}</li></a>
-        <a (click)="openAddProjectForm()" class="snippet">+</a>
+        <li *ngFor="let snippet of snippets">
+            <a class="snippet" [routerLink]="snippet.title">{{snippet.title}}</a>
+        </li>
+        <li>
+            <a (click)="openAddProjectForm()" class="snippet">+</a>
+        </li>
     </ul>
+
 </div>
 <div *ngIf="showForm" class="center-form">
     <!-- Форма для добавления новой задачи -->
@@ -14,4 +19,4 @@
         <button (click)="addProject()" class="input_task_btn">&#9745;</button>
         <button (click)="closeAddProjectForm()" class="input_task_btn">&#9746;</button>
     </div>
-  </div>
+</div>
