@@ -73,7 +73,7 @@
     </div>
   </div>
   <div class="boards_wrapper" cdkDropListGroup cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropCol($event)" [cdkDropListData]="boards">
-    <app-board-column *ngFor="let board of boards" [board]="board" [boards]="boards" [boardId]="board._id!" [projectId]="projectId" [projectName]="projectName" [userId]="userId" [boardName]='board.title' cdkDrag (boardDeleted)="onBoardDeleted($event)"></app-board-column>
+    <app-board-column *ngFor="let board of boards" [board]="board" [boards]="boards" [boardId]="board._id!" [projectId]="projectId" [projectName]="projectName" [userId]="userId" [boardName]='board.title' cdkDrag cdkDragLockAxis="x" (boardDeleted)="onBoardDeleted($event)"></app-board-column>
   </div>
 </div>
 <div *ngIf="showForm" class="center-form">
