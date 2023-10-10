@@ -22,6 +22,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FakeAuthService } from '../fake-auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { NewProjectAddFormComponent } from '../new-project-add-form/new-project-add-form.component';
 
 @Component({
   selector: 'app-board-main-content',
@@ -54,6 +56,7 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     private router: Router,
     private authService: FakeAuthService,
     private newtwork: MatSnackBar,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -133,7 +136,7 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
   dropCol(event: CdkDragDrop<BoardX[]>) {
     // console.log(event.container.data.order)
-    console.log(this.boards);
+    // console.log(this.boards);
     // console.log(this.boards[event.previousIndex].order)
 
     const boardData: BoardX = {
@@ -238,13 +241,30 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
   }
 
   onBoardDeleted(boardId: string) {
-    // Обновите данные в родительском компоненте
+    // Обновить данные в родительском компоненте
     this.boards = this.boards.filter((board) => board._id !== boardId);
   }
 
   showAddForm() {
-    this.showForm = true;
     this.newBoardName = '';
+    const dialogRef = this.dialog.open(NewProjectAddFormComponent, {
+      width: '450px',
+      data: {
+        boardName: this.newBoardName,
+        formType: 'column',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined && result.boardName) {
+        console.log('Новая колонка добавлена:', result.boardName);
+        this.newBoardName = result.boardName;
+        this.addBoard();
+      } else {
+        this.newBoardName = '';
+        console.log('Новая колонка не добавлена:', result);
+      }
+    })
   }
 
   closeAddColForm() {
