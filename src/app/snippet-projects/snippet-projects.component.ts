@@ -16,7 +16,7 @@ export class SnippetProjectsComponent implements OnInit {
     private taskService: TaskService,
     private authService: FakeAuthService,
     private dialog: MatDialog,
-    private newtwork: MatSnackBar
+    private newtwork: MatSnackBar,
   ) {}
 
   snippets: ProjectsX[] = [];
@@ -103,16 +103,22 @@ export class SnippetProjectsComponent implements OnInit {
     
     const dialogRef = this.dialog.open(NewProjectAddFormComponent, {
       width: '450px',
-      data: this.usersData,
+      data: {
+        title: this.newProjectName,
+        usersData: this.usersData,
+        formType: 'project',
+      },
     });
   
     dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined && result.name) { // result не undefined и имеет свойство 'name'
+      if (result !== undefined && result.title) { // result не undefined и имеет свойство 'name'
         console.log('Новый проект добавлен', result);
-        this.newProjectName = result.name;
-        this.selectedUser = result.selectedUser;
+        this.newProjectName = result.title;
+        this.selectedUser = result.usersData.selectedUser;
         this.addProject();
-      } else {
+      } else {        
+        this.newProjectName = '';
+        this.selectedUser = '';
         console.log('Новый проект не добавлен', result);
       }
     });
