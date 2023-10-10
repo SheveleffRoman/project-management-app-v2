@@ -101,6 +101,8 @@ export class BoardColumnComponent implements OnInit {
       task.order = index;
     });
 
+    this.newtwork.open('Saving...', 'ok');
+
     this.updateTaskOrderAndColumns();
   }
 
@@ -115,11 +117,13 @@ export class BoardColumnComponent implements OnInit {
       next: () => {
         // Успешная обработка запроса
         console.log('Update complete');
+        this.newtwork.dismiss();
         this.newtwork.open('Saved', 'ok', {duration: 1500});
       },
       error: (error) => {
         // Ошибка при обработке запроса
         console.error('Error updating tasks:', error);
+        this.newtwork.dismiss();
         this.newtwork.open('Something went wrong...', 'ok', {duration: 3000});
 
         // Можно добавить логику для отображения сообщения об ошибке пользователю

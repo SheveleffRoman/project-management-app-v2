@@ -145,7 +145,7 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
     console.log(event.container.data);
 
-    this.newtwork.open('Saving...', 'ok', {duration: 1500});
+    this.newtwork.open('Saving...', 'ok');
 
   const boardUpdateObservables = this.boards.map((board, index) => {
     board.order = index;
