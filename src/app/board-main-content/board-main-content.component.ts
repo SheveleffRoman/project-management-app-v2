@@ -21,6 +21,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { FakeAuthService } from '../fake-auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-board-main-content',
@@ -142,30 +143,34 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
 
-    console.log(event.container.data)
+    console.log(event.container.data);
 
-    this.boards.forEach((board, index) => {
-      board.order = index;
-      const boardDataLoop: BoardX = {
-            title: board.title,
-            order: index,
-          };
-      this.taskService.updateBoardOrder(this.projectId, board._id!, boardDataLoop).subscribe({
-        next: () => {
-          // Успешная обработка запроса
-          console.log('Update complete');
-          this.newtwork.open('Saved', 'ok', {duration: 1500});
-        },
-        error: (error) => {
-          // Ошибка при обработке запроса
-          console.error('Error updating tasks:', error);
-          this.newtwork.open('Something went wrong...', 'ok', {duration: 3000});
+    this.newtwork.open('Saving...', 'ok', {duration: 1500});
+
+  const boardUpdateObservables = this.boards.map((board, index) => {
+    board.order = index;
+    const boardDataLoop: BoardX = {
+      title: board.title,
+      order: index,
+    };
+    return this.taskService.updateBoardOrder(this.projectId, board._id!, boardDataLoop);
+  });
   
-          // Можно добавить логику для отображения сообщения об ошибке пользователю
-        },
-      })
-    })
-  }
+  forkJoin(boardUpdateObservables).subscribe({
+    next: () => {
+      // Успешное завершение всех запросов
+      console.log('All updates completed');
+      this.newtwork.dismiss();
+      this.newtwork.open('Saved', 'ok', { duration: 1500 });
+    },
+    error: (error) => {
+      // Ошибка при обработке одного из запросов
+      console.error('Error updating tasks:', error);
+      this.newtwork.dismiss();
+      this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+    },
+  });
+}
 
   compareBoardsByOrder(a: TaskX, b: TaskX) {
     return a.order - b.order;
