@@ -32,12 +32,3 @@
         </app-board-task>
     </div>
 </div>
-<div *ngIf="showForm" class="center-form">
-    <!-- Форма для добавления новой задачи -->
-    <div class="input_task_form">
-        <input [(ngModel)]="newTaskName" placeholder="Task Name" class="input_name">
-        <textarea [(ngModel)]="newTaskDescription" placeholder="Task Description" class="input_description"></textarea>
-        <button (click)="addNewTask()" class="input_task_btn">&#9745;</button>
-        <button (click)="closeAddForm()" class="input_task_btn">&#9746;</button>
-    </div>
-</div>

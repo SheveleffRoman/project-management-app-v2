@@ -17,6 +17,8 @@ import {
 } from '../task.service';
 import { take } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { NewProjectAddFormComponent } from '../new-project-add-form/new-project-add-form.component';
 
 @Component({
   selector: 'app-board-column',
@@ -45,7 +47,11 @@ export class BoardColumnComponent implements OnInit {
   isHidden: boolean = false;
   showRenameBoardForm: boolean = false;
 
-  constructor(private taskService: TaskService, private newtwork: MatSnackBar) {}
+  constructor(
+    private taskService: TaskService,
+    private newtwork: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getTasksByBoard();
@@ -53,13 +59,33 @@ export class BoardColumnComponent implements OnInit {
   }
 
   showAddForm() {
-    this.showForm = true;
     this.newTaskName = ''; // Сброс полей ввода
     this.newTaskDescription = '';
+
+    const dialogRef = this.dialog.open(NewProjectAddFormComponent, {
+      width: '450px',
+      data: {
+        title: this.newTaskName,
+        description: this.newTaskDescription,
+        formType: 'task',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined && result.title) {
+        console.log('Новое задание добавлено:', result.title, result.description);
+        this.newTaskName = result.title;
+        this.newTaskDescription = result.description;
+        this.addNewTask();
+      } else {
+        this.newTaskName = '';
+        this.newTaskDescription = '';
+        console.log('Новая колонка не добавлена:', result);
+      }
+    });
   }
 
   closeAddForm() {
-    this.showForm = false;
     this.newTaskName = ''; // Сброс полей ввода
     this.newTaskDescription = '';
   }
@@ -118,28 +144,18 @@ export class BoardColumnComponent implements OnInit {
         // Успешная обработка запроса
         console.log('Update complete');
         this.newtwork.dismiss();
-        this.newtwork.open('Saved', 'ok', {duration: 1500});
+        this.newtwork.open('Saved', 'ok', { duration: 1500 });
       },
       error: (error) => {
         // Ошибка при обработке запроса
         console.error('Error updating tasks:', error);
         this.newtwork.dismiss();
-        this.newtwork.open('Something went wrong...', 'ok', {duration: 3000});
+        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
 
         // Можно добавить логику для отображения сообщения об ошибке пользователю
       },
     });
   }
-
-  // getTasksByProject() {
-  //   this.taskService.getTasksByProject(this.projectId).subscribe(
-  //     (tasks) => {
-  //       this.tasksSet = tasks
-  //       console.log(this.tasksSet)
-  //     }
-  //   )
-
-  // }
 
   addNewTask() {
     if (this.newTaskName && this.newTaskDescription) {
@@ -233,11 +249,5 @@ export class BoardColumnComponent implements OnInit {
         // Генерируем событие для оповещения родительского компонента и прокидываем id доски
         this.boardDeleted.emit(this.board._id);
       });
-  }
-
-  private generateNewId(): number {
-    // Генерирует новый уникальный ID
-    // Например, можно использовать временную метку
-    return Date.now();
   }
 }
