@@ -86,78 +86,8 @@ export class TaskService {
 
   private tokenKey: string | null = null;
 
-  private projectAdded$ = new Subject<void>();
+  private projectUpdated$ = new Subject<void>();
 
-  projects: Projects[] = [
-    {
-      projectName: 'Mobile App',
-      boards: [
-        {
-          boardName: 'To Do',
-          tasks: [
-            {
-              id: 1,
-              name: 'Brainstorming',
-              description:
-                'Brainstorming brings team members diverse experience into play.',
-            },
-            {
-              id: 2,
-              name: 'Research',
-              description:
-                'User research helps you to create an optimal product for users.',
-            },
-            {
-              id: 3,
-              name: 'Wireframes',
-              description:
-                'Low fidelity wireframes include the most basic content and visuals.',
-            },
-          ],
-        },
-        {
-          boardName: 'Done',
-          tasks: [
-            {
-              id: 1,
-              name: 'Columns',
-              description:
-                'Brainstorming brings team members diverse experience into play.',
-            },
-            {
-              id: 2,
-              name: 'Tasks',
-              description:
-                'User research helps you to create an optimal product for users.',
-            },
-          ],
-        },
-      ],
-    },
-    // Добавьте другие проекты, если необходимо
-    {
-      projectName: 'Website Redisign',
-      boards: [
-        {
-          boardName: 'Done',
-          tasks: [
-            {
-              id: 1,
-              name: 'Columns',
-              description:
-                'Brainstorming brings team members diverse experience into play.',
-            },
-            {
-              id: 2,
-              name: 'Tasks',
-              description:
-                'User research helps you to create an optimal product for users.',
-            },
-          ],
-        },
-      ],
-    },
-  ];
   constructor(
     public dialog: MatDialog,
     private router: Router,
@@ -208,10 +138,6 @@ export class TaskService {
 
   //////////////////////////////////PROJECTS//////////////////////////////////
 
-  getProjects(): Projects[] {
-    return this.projects;
-  }
-
   getProjectsAll(): Observable<any> {
     this.tokenKey = this.authService.getToken();
     const headers = new HttpHeaders({
@@ -246,7 +172,7 @@ export class TaskService {
       .pipe(
         // После успешного добавления проекта отправляем сигнал
         tap(() => {
-          this.projectAdded$.next();
+          this.projectUpdated$.next();
         })
       );
   }
@@ -258,15 +184,13 @@ export class TaskService {
       Authorization: `Bearer ${this.tokenKey}`,
     });
     const requestOptions = { headers: headers };
-    return this.http.put<any>(
-      `${this.apiUrl}/boards/${id}`,
-      projectData,
-      requestOptions
-    );
+    return this.http
+      .put<any>(`${this.apiUrl}/boards/${id}`, projectData, requestOptions)
+      .pipe(tap(() => this.projectUpdated$.next()));
   }
 
   getProjectsUpdated(): Observable<void> {
-    return this.projectAdded$.asObservable();
+    return this.projectUpdated$.asObservable();
   }
 
   deleteProject(id: string, projectName: string): Observable<any> {
@@ -286,7 +210,7 @@ export class TaskService {
             .delete<any>(`${this.apiUrl}/boards/${id}`, requestOptions)
             .pipe(
               tap(() => {
-                this.router.navigate(['/projects']), this.projectAdded$.next();
+                this.router.navigate(['/projects']), this.projectUpdated$.next();
               })
             );
         } else {
