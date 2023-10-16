@@ -24,13 +24,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectAddFormComponent } from '../new-project-add-form/new-project-add-form.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-board-main-content',
   templateUrl: './board-main-content.component.html',
   styleUrls: ['./board-main-content.component.scss'],
 })
-export class BoardMainContentComponent implements OnInit, DoCheck {
+export class BoardMainContentComponent implements OnInit {
   projectName: string = '';
 
   login: string | null = '';
@@ -57,10 +58,12 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     private authService: FakeAuthService,
     private newtwork: MatSnackBar,
     private dialog: MatDialog,
+    private location: Location,
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
+      this.boards = [];
       this.projectName = decodeURIComponent(params['projectName']);
       this.findBoardsByProject(); // Перенесено сюда, чтобы projectId был установлен перед getBoards
     });
@@ -72,18 +75,17 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
     console.log(`Project name: ${this.projectName}`);
   }
 
-  ngDoCheck(): void {
-    // Сравниваем текущее значение projectName с предыдущим значением
-    if (this.projectName !== this.prevProjectName) {
-      // Если значение изменилось, выполните здесь необходимые действия
-      console.log('projectName изменилось:', this.projectName);
-      this.boards = [];
-      // this.findBoardsByProject();
-      // this.getBoards(this.projectId);
-      // другие действия, которые можно выполнить при изменении projectName
-      this.prevProjectName = this.projectName; // Обновляем prevProjectName
-    }
-  }
+  // ngDoCheck(): void {
+  //   // Сравниваем текущее значение projectName с предыдущим значением
+  //   if (this.projectName !== this.prevProjectName) {
+  //     // Если значение изменилось, выполните здесь необходимые действия
+  //     console.log('projectName изменилось:', this.projectName);
+  //     this.boards = [];
+  //     // другие действия, которые можно выполнить при изменении projectName
+  //     this.prevProjectName = this.projectName; // Обновляем prevProjectName
+  //     // this.findBoardsByProject();
+  //   }
+  // }
 
   findBoardsByProject() {
     this.taskService.getProjectsAll().subscribe((projects) => {
@@ -215,7 +217,11 @@ export class BoardMainContentComponent implements OnInit, DoCheck {
 
     this.taskService
       .updateProjectName(this.projectId, projectData)
-      .subscribe((response) => console.log(response));
+      .subscribe((response) => {
+        console.log(response);
+        this.location.go(`/projects/${title}`);
+        // this.findBoardsByProject()
+      });
     this.projectName = this.newProjectName;
     this.newProjectName = '';
     this.isHidden = false;
