@@ -239,15 +239,20 @@ export class BoardColumnComponent implements OnInit {
   deleteBoard(boardName: string) {
     this.taskService
       .deleteBoard(this.projectId, this.board._id!, boardName)
-      .subscribe(() => {
-        // Удалите доску из массива boards
-        this.boards = this.boards.filter(
-          (board) => board._id !== this.board._id
-        );
-        console.log(this.boards);
-
-        // Генерируем событие для оповещения родительского компонента и прокидываем id доски
-        this.boardDeleted.emit(this.board._id);
+      .subscribe((res) => {
+        if (res === true) {
+          // Удалить доску из массива boards
+          this.boards = this.boards.filter(
+            (board) => board._id !== this.board._id
+          );
+          console.log(this.boards);
+  
+          // Генерируем событие для оповещения родительского компонента и прокидываем id доски
+          this.boardDeleted.emit(this.board._id);
+        } else {
+          console.log("Доска не удалена");
+        }
       });
   }
+  
 }
