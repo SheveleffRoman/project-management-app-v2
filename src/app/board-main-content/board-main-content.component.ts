@@ -220,7 +220,6 @@ export class BoardMainContentComponent implements OnInit {
       .subscribe((response) => {
         console.log(response);
         this.location.go(`/projects/${title}`);
-        // this.findBoardsByProject()
       });
     this.projectName = this.newProjectName;
     this.newProjectName = '';
