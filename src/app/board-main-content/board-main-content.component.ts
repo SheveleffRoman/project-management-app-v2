@@ -58,7 +58,7 @@ export class BoardMainContentComponent implements OnInit {
     private authService: FakeAuthService,
     private newtwork: MatSnackBar,
     private dialog: MatDialog,
-    private location: Location,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -88,17 +88,26 @@ export class BoardMainContentComponent implements OnInit {
   // }
 
   findBoardsByProject() {
-    this.taskService.getProjectsAll().subscribe((projects) => {
-      const project = projects.find(
-        (project: any) => this.projectName === project.title
-      );
-      console.log(project);
-      this.projectId = project._id;
-      console.log(`Project Id:${this.projectId}`);
+    this.newtwork.open('Loading columns...', 'ok');
 
-      // Теперь, когда projectId установлен, можно вызвать getBoards(this.projectId)
-      this.getBoards(this.projectId);
-      // this.getTasksByProject(this.projectId);
+    this.taskService.getProjectsAll().subscribe({
+      next: (projects) => {
+        const project = projects.find(
+          (project: any) => this.projectName === project.title
+        );
+        console.log(project);
+        this.projectId = project._id;
+        console.log(`Project Id:${this.projectId}`);
+        // Теперь, когда projectId установлен, можно вызвать getBoards(this.projectId)
+        this.getBoards(this.projectId);
+        // this.getTasksByProject(this.projectId);
+      },
+      error: (error) => {
+        // Ошибка при обработке одного из запросов
+        console.error('Error loading columns:', error);
+        this.newtwork.dismiss();
+        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+      },
     });
   }
 
@@ -146,36 +155,44 @@ export class BoardMainContentComponent implements OnInit {
       order: event.currentIndex,
     };
 
-    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    moveItemInArray(
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
 
     console.log(event.container.data);
 
     this.newtwork.open('Saving...', 'ok');
 
-  const boardUpdateObservables = this.boards.map((board, index) => {
-    board.order = index;
-    const boardDataLoop: BoardX = {
-      title: board.title,
-      order: index,
-    };
-    return this.taskService.updateBoardOrder(this.projectId, board._id!, boardDataLoop);
-  });
-  
-  forkJoin(boardUpdateObservables).subscribe({
-    next: () => {
-      // Успешное завершение всех запросов
-      console.log('All updates completed');
-      this.newtwork.dismiss();
-      this.newtwork.open('Saved', 'ok', { duration: 1500 });
-    },
-    error: (error) => {
-      // Ошибка при обработке одного из запросов
-      console.error('Error updating tasks:', error);
-      this.newtwork.dismiss();
-      this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
-    },
-  });
-}
+    const boardUpdateObservables = this.boards.map((board, index) => {
+      board.order = index;
+      const boardDataLoop: BoardX = {
+        title: board.title,
+        order: index,
+      };
+      return this.taskService.updateBoardOrder(
+        this.projectId,
+        board._id!,
+        boardDataLoop
+      );
+    });
+
+    forkJoin(boardUpdateObservables).subscribe({
+      next: () => {
+        // Успешное завершение всех запросов
+        console.log('All updates completed');
+        this.newtwork.dismiss();
+        this.newtwork.open('Saved', 'ok', { duration: 1500 });
+      },
+      error: (error) => {
+        // Ошибка при обработке одного из запросов
+        console.error('Error updating tasks:', error);
+        this.newtwork.dismiss();
+        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+      },
+    });
+  }
 
   compareBoardsByOrder(a: TaskX, b: TaskX) {
     return a.order - b.order;
@@ -227,10 +244,20 @@ export class BoardMainContentComponent implements OnInit {
   }
 
   getBoards(id: string) {
-    this.taskService.getBoardsByProject(id).subscribe((columns) => {
-      // this.boards = columns;
-      this.boards = columns.sort(this.compareBoardsByOrder);
-      console.log(columns);
+
+    this.taskService.getBoardsByProject(id).subscribe({
+      next: (columns) => {
+        this.boards = columns.sort(this.compareBoardsByOrder);
+        console.log(columns);
+        this.newtwork.dismiss();
+        this.newtwork.open('Complete', 'ok', {duration: 1500});
+      },
+      error: (error) => {
+        // Ошибка при обработке запроса
+        console.error('Error getting tasks:', error);
+        this.newtwork.dismiss();
+        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+      },
     });
   }
 
@@ -269,7 +296,7 @@ export class BoardMainContentComponent implements OnInit {
         this.newBoardName = '';
         console.log('Новая колонка не добавлена:', result);
       }
-    })
+    });
   }
 
   closeAddColForm() {
