@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { ProfileChangeDialogComponent } from '../profile-change-dialog/profile-change-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -54,25 +54,47 @@ export class BoardHeaderProfileComponent implements OnInit {
     // console.log(message, data);
   }
 
-  // findName(): void {
-  //   let name = localStorage.getItem('login');
-  //   if (name) {
-  //     this.name = name;
-  //   }
-  // }
-
   getLogin() {
     this.login = this.authService.getLogin();
   }
 
-  showOptions() {
-    this.options = true;
+  showOptions(event: MouseEvent): void {
+    event.stopPropagation();
+    this.options = !this.options;
   }
 
-  declineOptions() {
+  closeOptions(): void {
     this.options = false;
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.options && !this.isClickInsideOptions(event)) {
+      this.closeOptions();
+    }
+  }
+
+  isClickInsideOptions(event: MouseEvent): boolean {
+    const optionsElement = document.querySelector('.options');
+    // использую !! для преобразования результата в логический тип. 
+    // Это гарантирует, что функция всегда вернет true или false, но не null.
+    return !!optionsElement && optionsElement.contains(event.target as Node); 
+  }
+
+  private actionMap: Record<string, () => void> = {
+    updateProfile: this.updateProfile.bind(this),
+    deleteProfile: this.deleteProfile.bind(this),
+    logout: this.logout.bind(this),
+  };
+
+  handleOptionClick(action: string) {
+    const method = this.actionMap[action];
+    if (typeof method === 'function') {
+      method(); // вызвать метод, если он есть
+    }
+    this.closeOptions(); // Всегда закрывать менюшку
+  }
+  
   showChangeDialog(): Observable<profileData> {
     const profileData: profileData = {
       name: this.name,
@@ -86,7 +108,7 @@ export class BoardHeaderProfileComponent implements OnInit {
     return dialogRef.afterClosed();
   }
 
-  updateProfile() {
+  updateProfile(): void {
     this.showChangeDialog().subscribe((result) => {
       if (result) {
         console.log(result);
@@ -113,7 +135,7 @@ export class BoardHeaderProfileComponent implements OnInit {
     });
   }
 
-  deleteProfile() {
+  deleteProfile(): void {
     this.authService.deleteUserById(this.userId!).subscribe(
       (response) => {
         console.log('Профиль успешно удален!', response);
@@ -124,7 +146,7 @@ export class BoardHeaderProfileComponent implements OnInit {
     );
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
   }
 }
