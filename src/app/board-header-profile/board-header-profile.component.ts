@@ -74,11 +74,18 @@ export class BoardHeaderProfileComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
+  onDocumentKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.closeOptions();
+    }
+  }
+
   isClickInsideOptions(event: MouseEvent): boolean {
     const optionsElement = document.querySelector('.options');
-    // использую !! для преобразования результата в логический тип. 
+    // использую !! для преобразования результата в логический тип.
     // Это гарантирует, что функция всегда вернет true или false, но не null.
-    return !!optionsElement && optionsElement.contains(event.target as Node); 
+    return !!optionsElement && optionsElement.contains(event.target as Node);
   }
 
   private actionMap: Record<string, () => void> = {
@@ -94,7 +101,7 @@ export class BoardHeaderProfileComponent implements OnInit {
     }
     this.closeOptions(); // Всегда закрывать менюшку
   }
-  
+
   showChangeDialog(): Observable<profileData> {
     const profileData: profileData = {
       name: this.name,
@@ -116,14 +123,15 @@ export class BoardHeaderProfileComponent implements OnInit {
         // this.name = result.name;
         this.login = 'Updating profile...';
 
-        this.authService.putUserById(this.userId!, result).subscribe(  // вот тут отправляются все три поля в тч пустой пароль, либо добываем пароль в поле, либо отправляем без него
+        this.authService.putUserById(this.userId!, result).subscribe(
+          // вот тут отправляются все три поля в тч пустой пароль, либо добываем пароль в поле, либо отправляем без него
           (response) => {
             // Обработка успешного ответа от сервера, если это необходимо.
             console.log('Профиль обновлен успешно!', response);
 
             this.login = result.login;
             this.name = result.name;
-            localStorage.setItem('login', this.login!)
+            localStorage.setItem('login', this.login!);
             // this.location = result.location;
           },
           (error) => {
