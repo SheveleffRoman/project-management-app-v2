@@ -20,6 +20,7 @@ import {
 } from './task-change-dialog/task-change-dialog.component';
 import { FakeAuthService } from './fake-auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface Projects {
   projectName: string;
@@ -92,7 +93,8 @@ export class TaskService {
     public dialog: MatDialog,
     private router: Router,
     private authService: FakeAuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private network: MatSnackBar
   ) {}
 
   showConfirmationDialog(title: string, message: string): Observable<boolean> {
@@ -210,7 +212,8 @@ export class TaskService {
             .delete<any>(`${this.apiUrl}/boards/${id}`, requestOptions)
             .pipe(
               tap(() => {
-                this.router.navigate(['/projects']), this.projectUpdated$.next();
+                this.router.navigate(['/projects']),
+                  this.projectUpdated$.next();
               })
             );
         } else {
@@ -263,6 +266,7 @@ export class TaskService {
     ).pipe(
       switchMap((result: boolean) => {
         if (result) {
+          this.network.open('Deleting...', 'ok');
           this.tokenKey = this.authService.getToken();
           const headers = new HttpHeaders({
             accept: 'application/json',
@@ -277,6 +281,9 @@ export class TaskService {
             .pipe(
               tap(() => {
                 //  this.projectAdded$.next();
+                this.network.dismiss();
+                this.network.open('Delete complete', 'ok', { duration: 1500 });
+
                 console.log('Delete complete');
               })
             );
