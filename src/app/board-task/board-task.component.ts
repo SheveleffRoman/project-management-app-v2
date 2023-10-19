@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   Inject,
   Input,
   OnInit,
@@ -12,7 +13,6 @@ import {
   TaskChangeDialogComponent,
   taskChangeData,
 } from '../task-change-dialog/task-change-dialog.component';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'app-board-task',
@@ -33,7 +33,10 @@ export class BoardTaskComponent {
 
   constructor(private taskService: TaskService, public dialog: MatDialog) {}
 
-  showOptions() {
+  showOptions(event: MouseEvent): void {
+    const body = document.querySelector('body'); // костыль для закрытия других меню
+    body?.click();
+    event.stopPropagation();
     this.confirmation = true;
   }
 
@@ -53,18 +56,37 @@ export class BoardTaskComponent {
       });
   }
 
-  declineOptions() {
+  closeOptions() {
     this.confirmation = false;
   }
 
   updateTask() {
     console.log(this.task);
-    this.taskService.updateTask(this.task).subscribe(
-      (result: boolean) => {
-        if (result) {
-          this.taskChanged.emit()
-        }
+    this.taskService.updateTask(this.task).subscribe((result: boolean) => {
+      if (result) {
+        this.taskChanged.emit();
       }
-    );
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.confirmation && !this.isClickInsideOptions(event)) {
+      this.closeOptions();
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onDocumentKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.closeOptions();
+    }
+  }
+
+  isClickInsideOptions(event: MouseEvent): boolean {
+    const optionsElement = document.querySelector('.delete_confirmation');
+    // использую !! для преобразования результата в логический тип.
+    // Это гарантирует, что функция всегда вернет true или false, но не null.
+    return !!optionsElement && optionsElement.contains(event.target as Node);
   }
 }
