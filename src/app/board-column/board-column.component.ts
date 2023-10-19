@@ -49,8 +49,8 @@ export class BoardColumnComponent implements OnInit {
 
   constructor(
     private taskService: TaskService,
-    private newtwork: MatSnackBar,
-    private dialog: MatDialog
+    private network: MatSnackBar,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +73,11 @@ export class BoardColumnComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined && result.title) {
-        console.log('Новое задание добавлено:', result.title, result.description);
+        console.log(
+          'Новое задание добавлено:',
+          result.title,
+          result.description
+        );
         this.newTaskName = result.title;
         this.newTaskDescription = result.description;
         this.addNewTask();
@@ -127,7 +131,7 @@ export class BoardColumnComponent implements OnInit {
       task.order = index;
     });
 
-    this.newtwork.open('Saving...', 'ok');
+    this.network.open('Saving...', 'ok');
 
     this.updateTaskOrderAndColumns();
   }
@@ -143,14 +147,14 @@ export class BoardColumnComponent implements OnInit {
       next: () => {
         // Успешная обработка запроса
         console.log('Update complete');
-        this.newtwork.dismiss();
-        this.newtwork.open('Saved', 'ok', { duration: 1500 });
+        this.network.dismiss();
+        this.network.open('Saved', 'ok', { duration: 1500 });
       },
       error: (error) => {
         // Ошибка при обработке запроса
         console.error('Error updating tasks:', error);
-        this.newtwork.dismiss();
-        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+        this.network.dismiss();
+        this.network.open('Something went wrong...', 'ok', { duration: 3000 });
 
         // Можно добавить логику для отображения сообщения об ошибке пользователю
       },
@@ -240,19 +244,21 @@ export class BoardColumnComponent implements OnInit {
     this.taskService
       .deleteBoard(this.projectId, this.board._id!, boardName)
       .subscribe((res) => {
-        if (res === true) {
+        if (res) {
+          // this.network.dismiss();
+          // this.network.open('Delete complete', 'ok', {duration: 1500});
           // Удалить доску из массива boards
           this.boards = this.boards.filter(
             (board) => board._id !== this.board._id
           );
           console.log(this.boards);
-  
+
           // Генерируем событие для оповещения родительского компонента и прокидываем id доски
           this.boardDeleted.emit(this.board._id);
+          console.log('Доска удалена!');
         } else {
-          console.log("Доска не удалена");
+          console.log('Доска не удалена');
         }
       });
   }
-  
 }
