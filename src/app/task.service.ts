@@ -370,11 +370,18 @@ export class TaskService {
       accept: 'application/json',
       Authorization: `Bearer ${this.tokenKey}`,
     });
+    this.network.open('Create task...', 'ok')
+
     const requestOptions = { headers: headers };
     return this.http.post<any>(
       `${this.apiUrl}/boards/${projectId}/columns/${boardId}/tasks`,
       taskData,
       requestOptions
+    ).pipe(
+      tap(() => {
+        this.network.dismiss();
+        this.network.open('Create complete', 'ok', { duration: 1500 });
+      })
     );
   }
 
@@ -390,6 +397,7 @@ export class TaskService {
     ).pipe(
       switchMap((result: boolean) => {
         if (result) {
+          this.network.open('Deleting task...', 'ok')
           this.tokenKey = this.authService.getToken();
           const headers = new HttpHeaders({
             accept: 'application/json',
@@ -404,6 +412,9 @@ export class TaskService {
             .pipe(
               tap(() => {
                 //  this.projectAdded$.next();
+                this.network.dismiss();
+                this.network.open('Delete complete', 'ok', { duration: 1500 });
+
                 console.log('Delete complete');
               })
             );
