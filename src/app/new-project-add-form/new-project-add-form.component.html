@@ -39,11 +39,11 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>Description</mat-label>
-      <textarea [(ngModel)]="data.description" matInput placeholder="Task description..."></textarea>
+      <textarea required [(ngModel)]="data.description" matInput placeholder="Task description..."></textarea>
     </mat-form-field>
     <div mat-dialog-actions>
       <button mat-button (click)="onNoClick()" cdkFocusInitial>No</button>
-      <button mat-button (click)="onChange()" [disabled]="!data.title">Ok</button>
+      <button mat-button (click)="onChange()" [disabled]="!data.title || !data.description">Ok</button>
     </div>
   </ng-container>
 
