@@ -202,6 +202,7 @@ export class TaskService {
     ).pipe(
       switchMap((result: boolean) => {
         if (result) {
+          this.network.open('Deleting...', 'ok', {duration: 1500});
           this.tokenKey = this.authService.getToken();
           const headers = new HttpHeaders({
             accept: 'application/json',
