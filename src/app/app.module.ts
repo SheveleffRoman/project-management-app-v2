@@ -38,6 +38,7 @@ import { ProfileChangeDialogComponent } from './profile-change-dialog/profile-ch
 import { JwtModule } from "@auth0/angular-jwt";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NewProjectAddFormComponent } from './new-project-add-form/new-project-add-form.component';
+import { SnippetComponent } from './snippet/snippet.component';
 
 const routes: Routes = [
   {
@@ -89,6 +90,7 @@ const routes: Routes = [
     TaskChangeDialogComponent,
     ProfileChangeDialogComponent,
     NewProjectAddFormComponent,
+    SnippetComponent,
   ],
   imports: [
     BrowserModule,
