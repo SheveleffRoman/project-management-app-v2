@@ -56,7 +56,7 @@ export class BoardMainContentComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: FakeAuthService,
-    private newtwork: MatSnackBar,
+    private network: MatSnackBar,
     private dialog: MatDialog,
     private location: Location
   ) {}
@@ -88,7 +88,7 @@ export class BoardMainContentComponent implements OnInit {
   // }
 
   findBoardsByProject() {
-    this.newtwork.open('Loading columns...', 'ok');
+    this.network.open('Loading columns...', 'ok');
 
     this.taskService.getProjectsAll().subscribe({
       next: (projects) => {
@@ -105,8 +105,8 @@ export class BoardMainContentComponent implements OnInit {
       error: (error) => {
         // Ошибка при обработке одного из запросов
         console.error('Error loading columns:', error);
-        this.newtwork.dismiss();
-        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+        this.network.dismiss();
+        this.network.open('Something went wrong...', 'ok', { duration: 3000 });
       },
     });
   }
@@ -163,7 +163,7 @@ export class BoardMainContentComponent implements OnInit {
 
     console.log(event.container.data);
 
-    this.newtwork.open('Saving...', 'ok');
+    this.network.open('Saving...', 'ok');
 
     const boardUpdateObservables = this.boards.map((board, index) => {
       board.order = index;
@@ -182,14 +182,14 @@ export class BoardMainContentComponent implements OnInit {
       next: () => {
         // Успешное завершение всех запросов
         console.log('All updates completed');
-        this.newtwork.dismiss();
-        this.newtwork.open('Saved', 'ok', { duration: 1500 });
+        this.network.dismiss();
+        this.network.open('Saved', 'ok', { duration: 1500 });
       },
       error: (error) => {
         // Ошибка при обработке одного из запросов
         console.error('Error updating tasks:', error);
-        this.newtwork.dismiss();
-        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+        this.network.dismiss();
+        this.network.open('Something went wrong...', 'ok', { duration: 3000 });
       },
     });
   }
@@ -244,19 +244,18 @@ export class BoardMainContentComponent implements OnInit {
   }
 
   getBoards(id: string) {
-
     this.taskService.getBoardsByProject(id).subscribe({
       next: (columns) => {
         this.boards = columns.sort(this.compareBoardsByOrder);
         console.log(columns);
-        this.newtwork.dismiss();
-        this.newtwork.open('Complete', 'ok', {duration: 1500});
+        this.network.dismiss();
+        this.network.open('Complete', 'ok', { duration: 1500 });
       },
       error: (error) => {
         // Ошибка при обработке запроса
         console.error('Error getting tasks:', error);
-        this.newtwork.dismiss();
-        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+        this.network.dismiss();
+        this.network.open('Something went wrong...', 'ok', { duration: 3000 });
       },
     });
   }
@@ -305,6 +304,16 @@ export class BoardMainContentComponent implements OnInit {
   }
 
   deleteProject(projectName: string) {
-    this.taskService.deleteProject(this.projectId, projectName).subscribe();
+    this.taskService.deleteProject(this.projectId, projectName).subscribe({
+      next: () => {
+        this.network.dismiss();
+        this.network.open('Project delete', 'ok', { duration: 1500 });
+      },
+      error: (error) => {
+        console.error('Error deleting project:', error);
+        this.network.dismiss();
+        this.network.open('Something went wrong...', 'ok', { duration: 3000 });
+      },
+    });
   }
 }
