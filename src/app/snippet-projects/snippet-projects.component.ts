@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Projects, ProjectsX, TaskService } from '../task.service';
 import { FakeAuthService, User } from '../fake-auth.service';
-import { Subscription, skipUntil } from 'rxjs';
+import { Subscription, every, skipUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectAddFormComponent } from '../new-project-add-form/new-project-add-form.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,7 +16,7 @@ export class SnippetProjectsComponent implements OnInit {
     private taskService: TaskService,
     private authService: FakeAuthService,
     private dialog: MatDialog,
-    private newtwork: MatSnackBar,
+    private newtwork: MatSnackBar
   ) {}
 
   snippets: ProjectsX[] = [];
@@ -31,6 +31,7 @@ export class SnippetProjectsComponent implements OnInit {
 
   showForm: boolean = false;
   newProjectName: string = '';
+  openOptions: boolean = false;
 
   ngOnInit(): void {
     this.getSnippets();
@@ -54,7 +55,9 @@ export class SnippetProjectsComponent implements OnInit {
           this.userId = user._id;
           // отладочный метод для вывода информации
           this.debugInfo('User found:', user);
-          this.usersData = users.filter((user: User) => user._id !== this.userId );
+          this.usersData = users.filter(
+            (user: User) => user._id !== this.userId
+          );
           // console.log(this.usersData);
           this.taskService.getSetProjects(this.userId).subscribe((set) => {
             // this.snippets = [];
@@ -82,17 +85,6 @@ export class SnippetProjectsComponent implements OnInit {
     // console.log(message, data);
   }
 
-  // addProject() {
-  //   this.taskService.addProject(this.newProjectName);
-  //   this.newProjectName = '';
-  //   this.showForm = false;
-  // }
-
-  // openAddProjectForm() {
-  //   this.newProjectName = '';
-  //   this.showForm = true;
-  // }
-
   closeAddProjectForm() {
     this.newProjectName = '';
     this.showForm = false;
@@ -100,7 +92,7 @@ export class SnippetProjectsComponent implements OnInit {
 
   openAddProjectForm(): void {
     this.newProjectName = '';
-    
+
     const dialogRef = this.dialog.open(NewProjectAddFormComponent, {
       width: '450px',
       data: {
@@ -109,23 +101,21 @@ export class SnippetProjectsComponent implements OnInit {
         formType: 'project',
       },
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined && result.title) { // result не undefined и имеет свойство 'name'
+      if (result !== undefined && result.title) {
+        // result не undefined и имеет свойство 'name'
         console.log('Новый проект добавлен', result);
         this.newProjectName = result.title;
         this.selectedUser = result.usersData.selectedUser;
         this.addProject();
-      } else {        
+      } else {
         this.newProjectName = '';
         this.selectedUser = '';
         console.log('Новый проект не добавлен', result);
       }
     });
-    
-    
   }
-  
 
   addProject(): void {
     const title = this.newProjectName;
@@ -154,15 +144,21 @@ export class SnippetProjectsComponent implements OnInit {
 
     this.taskService.createProject(boardData).subscribe({
       next: (res) => {
-        console.log('Task add complete',res)
-        this.newtwork.open('Saved', 'ok', {duration: 1500});
+        console.log('Task add complete', res);
+        this.newtwork.open('Saved', 'ok', { duration: 1500 });
       },
       error: (error) => {
         console.error('Error add task:', error);
-        this.newtwork.open('Something went wrong...', 'ok', {duration: 3000});
-      }
-    })
+        this.newtwork.open('Something went wrong...', 'ok', { duration: 3000 });
+      },
+    });
     this.newProjectName = '';
     this.showForm = false;
+  }
+
+  showOptions(event: MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.openOptions = true;
   }
 }
