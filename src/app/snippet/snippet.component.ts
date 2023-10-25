@@ -12,10 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./snippet.component.scss'],
 })
 export class SnippetComponent {
-  constructor(
-    private taskService: TaskService,
-    private network: MatSnackBar,
-  ) {}
+  constructor(private taskService: TaskService, private network: MatSnackBar) {}
 
   @Input() snippet!: ProjectsX;
 
@@ -69,17 +66,22 @@ export class SnippetComponent {
   }
 
   deleteProject() {
-
-    this.taskService.deleteProject(this.snippet._id!, this.snippet.title).subscribe({
-      next: () => {
-        this.network.dismiss();
-        this.network.open('Project delete', 'ok', {duration: 1500})
-      },
-      error: (error) => {
-        console.error('Error deleting project:', error);
-        this.network.dismiss();
-        this.network.open('Something went wrong...', 'ok', { duration: 3000 });
-      }
-    });
+    this.taskService
+      .deleteProject(this.snippet._id!, this.snippet.title)
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.network.dismiss();
+            this.network.open('Project delete', 'ok', { duration: 1500 });
+          }
+        },
+        error: (error) => {
+          console.error('Error deleting project:', error);
+          this.network.dismiss();
+          this.network.open('Something went wrong...', 'ok', {
+            duration: 3000,
+          });
+        },
+      });
   }
 }
