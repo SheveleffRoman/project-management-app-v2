@@ -1,0 +1,103 @@
+.column_block {
+    max-width: 22.125rem;
+    min-width: 22.125rem;
+    height: auto;
+    border-radius: 1rem 1rem 1rem 1rem;
+    background: #F5F5F5;
+    padding: 1.6rem 1.25rem;
+    position: relative;
+}
+
+.column_header {
+    position: relative;
+    color: #0D062D;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1.19rem;
+    border-bottom: 3px solid #5030E5;
+    margin-bottom: 1.75rem;
+
+
+    p::before {
+        content: '\2666';
+        margin-right: 5px;
+        color: rgb(50, 13, 235);
+
+    }
+
+    span {
+        width: 1.25rem;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        height: 1.25rem;
+        border-radius: 0.625rem;
+        background: #E0E0E0;
+        color: #625F6D;
+        font-family: Inter;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+
+    svg:first-of-type {
+        margin-left: auto;
+    }
+
+}
+
+.tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-height: 5rem;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.tasks.cdk-drop-list-dragging .task-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.center-form {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0px;
+    width: 100vw;
+    height: 100vh;
+    left: 0px;
+    z-index: 1;
+}
+
+.input_task_form {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.input_name {
+    font-size: 1rem;
+}
+
+.input_task_btn {
+    margin-top: 20px;
+    margin-right: 10px;
+}

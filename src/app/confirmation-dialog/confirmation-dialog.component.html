@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content> {{data.message}}?</div>
+<div mat-dialog-content *ngIf="data.deleteProfile">
+  <mat-form-field>
+    <mat-label>Введи свой логин для подтверждения</mat-label>
+    <input type="text" matInput [formControl]="profileForm.controls.username">
+  </mat-form-field>
+  <h1>{{login}}</h1>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close cdkFocusInitial (click)="closeDialog()">No</button>
+  <button mat-button mat-dialog-close (click)="confirm()"
+    [disabled]="!profileForm.valid && data.deleteProfile">Ok</button>
+</div>

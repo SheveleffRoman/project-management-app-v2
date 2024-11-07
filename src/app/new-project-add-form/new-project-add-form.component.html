@@ -1,0 +1,50 @@
+<h1 mat-dialog-title>Add new {{data.formType}}</h1>
+<div mat-dialog-content class="input_fields">
+
+  <ng-container *ngIf="data.formType === 'project'">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input required [(ngModel)]="data.title" matInput>
+      <mat-error>required</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Select user</mat-label>
+      <mat-select [(ngModel)]="data.usersData.selectedUser" multiple>
+        <mat-option *ngFor="let user of data.usersData" [value]="user._id">{{user.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onNoClick()" cdkFocusInitial>No</button>
+      <button mat-button (click)="onChange()" [disabled]="!data.title">Ok</button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="data.formType === 'column'">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input required [(ngModel)]="data.boardName" matInput>
+      <mat-error>required</mat-error>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onNoClick()" cdkFocusInitial>No</button>
+      <button mat-button (click)="onChange()" [disabled]="!data.boardName">Ok</button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="data.formType === 'task'">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input required [(ngModel)]="data.title" matInput>
+      <mat-error>required</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea required [(ngModel)]="data.description" matInput placeholder="Task description..."></textarea>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onNoClick()" cdkFocusInitial>No</button>
+      <button mat-button (click)="onChange()" [disabled]="!data.title || !data.description">Ok</button>
+    </div>
+  </ng-container>
+
+</div>

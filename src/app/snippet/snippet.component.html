@@ -1,0 +1,27 @@
+<div class="flex row">
+    <a class="flex row" [routerLink]="snippet.title">
+        <div class="snippet-container" [class.openOptions]="openOptions">
+            <div class="snippet-content">
+                <div class="snippet_header">
+                    <h1 class="snippet-title">{{snippet.title}}</h1>
+                    <span class="options-trigger" (click)="showOptions($event)">...</span>
+                </div>
+                <div class="snippet_image"></div>
+                <div class="snippet_footer"></div>
+            </div>
+        </div>
+    </a>
+    <div *ngIf="openOptions" class="options">
+        <div class="option_delete" (click)="deleteProject()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
+                <path
+                    d="M11.25 27.5H18.75C25 27.5 27.5 25 27.5 18.75V11.25C27.5 5 25 2.5 18.75 2.5H11.25C5 2.5 2.5 5 2.5 11.25V18.75C2.5 25 5 27.5 11.25 27.5Z"
+                    fill="#5030E5" fill-opacity="0.2" />
+                <path d="M9.05 9.05L20.95 20.95" stroke="#5030E5" stroke-width="1.5" stroke-miterlimit="10"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M9.05 20.95L20.95 9.05" stroke="#5030E5" stroke-width="1.5" stroke-miterlimit="10"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+</div>

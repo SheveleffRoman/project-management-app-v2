@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Profile change</h1>
+<div mat-dialog-content class="input_fields">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Login</mat-label>
+    <input matInput [(ngModel)]="data.login">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>New password or repeat old</mat-label>
+    <input required matInput [(ngModel)]="data.password">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>No</button>
+  <button mat-button [disabled]="!data.password" (click)="onChange()">Ok</button>
+</div>

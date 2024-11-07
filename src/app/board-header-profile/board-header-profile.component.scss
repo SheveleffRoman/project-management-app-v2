@@ -1,0 +1,84 @@
+.profile_block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 3rem;
+}
+
+.meta_profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    h3 {
+        color: #0D062D;
+        text-align: right;
+        font-family: Inter;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    p {
+        color: #787486;
+        text-align: right;
+        font-family: Inter;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+}
+
+.profile_photo {
+    width: 2.375rem;
+    height: 2.375rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile_arrow {
+    cursor: pointer;
+}
+
+.options {
+    position: absolute;
+    top: 5.5rem;
+    right: 2.5rem;
+    color: #0D062D;
+    font-family: Inter;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    height: auto;
+    width: 10rem;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    border: 1px solid #DBDBDB;
+    border-top: none;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    z-index: 1;
+
+    button {
+        padding: 0.6rem;
+        max-width: 6.5rem;
+        width: 6.5rem;
+        border-radius: 1rem;
+    }
+
+    button:hover{
+        background-color: #aeaeae;
+    }
+}
