@@ -1,27 +1,41 @@
 # ProjectManagementAppV2
 
+This is an educational project developed as part of the RS School curriculum. It demonstrates a simple project management app with a frontend built in Angular and a backend provided by RS School. The backend is deployed on Render.com, and MongoDB is used for data storage.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.5.
 
-## Development server
+## Getting Started
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+To start the project locally:
 
-## Code scaffolding
+1. Clone the repository
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `git clone https://github.com/SheveleffRoman/project-management-app-v2.git` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Build
+2. Install dependencies
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+`npm install`
 
-## Running unit tests
+3. Run the application
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+`npm run start`
 
-## Running end-to-end tests
+Open http://localhost:4200 to view it in the browser.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Note: As the backend is hosted on a free Render.com plan, it might occasionally be unresponsive.
 
-## Further help
+## Project Details
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Frontend: Built with Angular 16.1.5, utilizing RxJS for data flow management and enhanced with Angular CLI tools.
+Backend: Hosted on Render.com, using a MongoDB database for data storage. This backend is a learning resource provided by RS School.
+
+## Available Commands
+
+Development Server:
+Run `ng serve` to start a development server. Navigate to http://localhost:4200/.
+
+Code Scaffolding:
+Use ng generate component <component-name> to generate a new component.
+
+Build:
+Run `ng build` to build the project. The build artifacts will be stored in the dist/ directory.
