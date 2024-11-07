@@ -4,6 +4,14 @@ This is an educational project developed as part of the RS School curriculum. It
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.5.
 
+<img src="https://github.com/user-attachments/assets/b9df4655-78c2-4890-aa8f-918d9c2d5aa3" alt="Project Screenshot" width="700"/>
+
+---
+
+<img src="https://github.com/user-attachments/assets/3a8d8c03-427c-4d6f-9255-ecce8190e4d1" alt="Project Screenshot" width="700"/>
+
+---
+
 ## Getting Started
 
 To start the project locally:
